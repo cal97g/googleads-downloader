@@ -1,0 +1,843 @@
+# https://developers.google.com/google-ads/api/reference/rpc/google.ads.googleads.v2.resources
+# https://developers.google.com/google-ads/api/docs/reporting/criteria-metrics
+# https://developers.google.com/adwords/api/docs/guides/awql
+
+# NOTE: We don't apply enabled filtering on perf, so we may get performance
+# for data that isn't in our effectively enabled or in-scope datasets.
+# However this allows us to re-pull perf data retrospectively without concern
+# about entity states.
+
+queries:
+
+  #
+  # Customer (account)
+  # https://developers.google.com/google-ads/api/fields/v2/customer
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  # - metrics.active_view_cpm
+  # - metrics.active_view_ctr
+  # - metrics.active_view_impressions
+  # - metrics.active_view_measurability
+  # - metrics.active_view_measurable_cost_micros
+  # - metrics.active_view_measurable_impressions
+  # - metrics.active_view_viewability
+  # - metrics.video_view_rate
+  # - metrics.video_views
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.all_conversions_from_interactions_rate
+  # - metrics.average_cost
+  # - metrics.average_cpc
+  # - metrics.average_cpe
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.conversions_from_interactions_rate
+  # - metrics.cost_per_all_conversions
+  # - metrics.cost_per_conversion
+  # - metrics.ctr
+  # - metrics.engagement_rate
+  # - metrics.interaction_rate
+  # - metrics.invalid_click_rate
+  # - metrics.value_per_all_conversions
+  # - metrics.value_per_conversion
+  -
+    filename_prefix: 'customer.perf.with_impressions,range({{start_date}}.{{end_date}}).unsegmented'
+    query: 
+      SELECT
+
+        customer.id,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.content_budget_lost_impression_share,
+        metrics.content_impression_share,
+        metrics.content_rank_lost_impression_share,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.invalid_clicks,
+        metrics.search_budget_lost_impression_share,
+        metrics.search_exact_match_impression_share,
+        metrics.search_impression_share,
+        metrics.search_rank_lost_impression_share,
+        metrics.view_through_conversions
+
+      FROM
+        customer
+      WHERE
+        segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  -
+    filename_prefix: 'customer.perf.with_impressions,range({{perf_initial_date}}.{{end_date}}).date'
+    query: 
+      SELECT
+
+        customer.id,
+
+        segments.date,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.content_budget_lost_impression_share,
+        metrics.content_impression_share,
+        metrics.content_rank_lost_impression_share,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.invalid_clicks,
+        metrics.search_budget_lost_impression_share,
+        metrics.search_exact_match_impression_share,
+        metrics.search_impression_share,
+        metrics.search_rank_lost_impression_share,
+        metrics.view_through_conversions
+
+      FROM
+        customer
+      WHERE
+        segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  #
+  # Campaign
+  # https://developers.google.com/google-ads/api/fields/v2/campaign
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  # - metrics.active_view_cpm
+  # - metrics.active_view_ctr
+  # - metrics.active_view_impressions
+  # - metrics.active_view_measurability
+  # - metrics.active_view_measurable_cost_micros
+  # - metrics.active_view_measurable_impressions
+  # - metrics.active_view_viewability
+  # - metrics.gmail_forwards
+  # - metrics.gmail_saves
+  # - metrics.gmail_secondary_clicks
+  # - metrics.relative_ctr
+  # - metrics.video_quartile_100_rate
+  # - metrics.video_quartile_25_rate
+  # - metrics.video_quartile_50_rate
+  # - metrics.video_quartile_75_rate
+  # - metrics.video_view_rate
+  # - metrics.video_views
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.all_conversions_value_per_cost
+  # - metrics.average_cost
+  # - metrics.average_cpc
+  # - metrics.average_cpe
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.conversions_from_interactions_rate
+  # - metrics.conversions_from_interactions_value_per_interaction
+  # - metrics.conversions_value_per_cost
+  # - metrics.ctr
+  # - metrics.cost_per_all_conversions
+  # - metrics.cost_per_conversion
+  # - metrics.cost_per_current_model_attributed_conversion
+  # - metrics.current_model_attributed_conversions_from_interactions_rate
+  # - metrics.current_model_attributed_conversions_from_interactions_value_per_interaction
+  # - metrics.current_model_attributed_conversions_value_per_cost
+  # - metrics.engagement_rate
+  # - metrics.interaction_rate
+  # - metrics.invalid_click_rate
+  # - metrics.message_chat_rate
+  # - metrics.phone_through_rate
+  # - metrics.value_per_all_conversions
+  # - metrics.value_per_conversion
+  # - metrics.value_per_current_model_attributed_conversion
+  #
+  # Metrics which can't be requested when using FROM campaign
+  # - metrics.all_conversions_from_click_to_call,
+  # - metrics.all_conversions_from_directions,
+  # - metrics.all_conversions_from_interactions_value_per_interaction,
+  # - metrics.all_conversions_from_menu,
+  # - metrics.all_conversions_from_order,
+  # - metrics.all_conversions_from_other_engagement,
+  # - metrics.all_conversions_from_store_visit,
+  # - metrics.all_conversions_from_store_website,
+  # - metrics.benchmark_average_max_cpc,
+  # - metrics.historical_creative_quality_score,
+  # - metrics.historical_landing_page_quality_score,
+  # - metrics.historical_quality_score,
+  # - metrics.historical_search_predicted_ctr,
+  # - metrics.hotel_average_lead_value_micros,
+  # - metrics.hotel_price_difference_percentage,
+  # - metrics.message_chats,
+  # - metrics.message_impressions,
+  # - metrics.mobile_friendly_clicks_percentage,
+  # - metrics.speed_score,
+  # - metrics.valid_accelerated_mobile_pages_clicks_percentage,
+  -
+    filename_prefix: 'campaign.perf.search,with_impressions,range({{start_date}}.{{end_date}}).unsegmented'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+
+        metrics.absolute_top_impression_percentage,
+        metrics.all_conversions,
+        metrics.all_conversions_from_interactions_rate,
+        metrics.all_conversions_value,
+        metrics.average_page_views,
+        metrics.average_time_on_site,
+        metrics.bounce_rate,
+        metrics.clicks,
+        metrics.content_budget_lost_impression_share,
+        metrics.content_impression_share,
+        metrics.content_rank_lost_impression_share,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.current_model_attributed_conversions,
+        metrics.current_model_attributed_conversions_value,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.invalid_clicks,
+        metrics.percent_new_visitors,
+        metrics.phone_calls,
+        metrics.phone_impressions,
+        metrics.search_absolute_top_impression_share,
+        metrics.search_budget_lost_absolute_top_impression_share,
+        metrics.search_budget_lost_impression_share,
+        metrics.search_budget_lost_top_impression_share,
+        metrics.search_click_share,
+        metrics.search_exact_match_impression_share,
+        metrics.search_impression_share,
+        metrics.search_rank_lost_absolute_top_impression_share,
+        metrics.search_rank_lost_impression_share,
+        metrics.search_rank_lost_top_impression_share,
+        metrics.search_top_impression_share,
+        metrics.top_impression_percentage,
+        metrics.view_through_conversions
+
+      FROM
+        campaign
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  -
+    filename_prefix: 'campaign.perf.search,with_impressions,range({{perf_initial_date}}.{{end_date}}).date'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+
+        segments.date,
+
+        metrics.absolute_top_impression_percentage,
+        metrics.all_conversions,
+        metrics.all_conversions_from_interactions_rate,
+        metrics.all_conversions_value,
+        metrics.average_page_views,
+        metrics.average_time_on_site,
+        metrics.bounce_rate,
+        metrics.clicks,
+        metrics.content_budget_lost_impression_share,
+        metrics.content_impression_share,
+        metrics.content_rank_lost_impression_share,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.current_model_attributed_conversions,
+        metrics.current_model_attributed_conversions_value,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.invalid_clicks,
+        metrics.percent_new_visitors,
+        metrics.phone_calls,
+        metrics.phone_impressions,
+        metrics.search_absolute_top_impression_share,
+        metrics.search_budget_lost_absolute_top_impression_share,
+        metrics.search_budget_lost_impression_share,
+        metrics.search_budget_lost_top_impression_share,
+        metrics.search_click_share,
+        metrics.search_exact_match_impression_share,
+        metrics.search_impression_share,
+        metrics.search_rank_lost_absolute_top_impression_share,
+        metrics.search_rank_lost_impression_share,
+        metrics.search_rank_lost_top_impression_share,
+        metrics.search_top_impression_share,
+        metrics.top_impression_percentage,
+        metrics.view_through_conversions
+
+      FROM
+        campaign
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  #
+  # AdGroup
+  # https://developers.google.com/google-ads/api/fields/v2/ad_group
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  # - metrics.active_view_cpm
+  # - metrics.active_view_ctr
+  # - metrics.active_view_impressions
+  # - metrics.active_view_measurability
+  # - metrics.active_view_measurable_cost_micros
+  # - metrics.active_view_measurable_impressions
+  # - metrics.active_view_viewability
+  # - metrics.gmail_forwards
+  # - metrics.gmail_saves
+  # - metrics.gmail_secondary_clicks
+  # - metrics.relative_ctr
+  # - metrics.video_quartile_100_rate
+  # - metrics.video_quartile_25_rate
+  # - metrics.video_quartile_50_rate
+  # - metrics.video_quartile_75_rate
+  # - metrics.video_view_rate
+  # - metrics.video_views
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.all_conversions_from_interactions_rate
+  # - metrics.all_conversions_from_interactions_value_per_interaction
+  # - metrics.all_conversions_value_per_cost
+  # - metrics.average_cost
+  # - metrics.average_cpc
+  # - metrics.average_cpe
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.conversions_from_interactions_rate
+  # - metrics.conversions_from_interactions_value_per_interaction
+  # - metrics.cost_per_all_conversions
+  # - metrics.cost_per_conversion
+  # - metrics.cost_per_current_model_attributed_conversion
+  # - metrics.current_model_attributed_conversions_from_interactions_rate
+  # - metrics.current_model_attributed_conversions_from_interactions_value_per_interaction
+  # - metrics.current_model_attributed_conversions_value_per_cost
+  # - metrics.interaction_rate
+  # - metrics.message_chat_rate
+  # - metrics.phone_through_rate
+  # - metrics.value_per_all_conversions
+  # - metrics.value_per_conversion
+  # - metrics.value_per_current_model_attributed_conversion
+  #
+  # Metrics which can't be requested when using FROM ad_group
+  # - metrics.benchmark_average_max_cpc,
+  # - metrics.content_budget_lost_impression_share,
+  # - metrics.conversions_value_per_cost,
+  # - metrics.historical_creative_quality_score,
+  # - metrics.historical_landing_page_quality_score,
+  # - metrics.historical_quality_score,
+  # - metrics.historical_search_predicted_ctr,
+  # - metrics.hotel_average_lead_value_micros,
+  # - metrics.hotel_price_difference_percentage,
+  # - metrics.message_chats,
+  # - metrics.message_impressions,
+  # - metrics.mobile_friendly_clicks_percentage,
+  # - metrics.search_budget_lost_impression_share,
+  # - metrics.search_click_share,
+  # - metrics.speed_score,
+  # - metrics.valid_accelerated_mobile_pages_clicks_percentage,
+  -
+    filename_prefix: 'ad_group.perf.search,with_impressions,range({{start_date}}.{{end_date}}).unsegmented'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        metrics.absolute_top_impression_percentage,
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.average_page_views,
+        metrics.average_time_on_site,
+        metrics.bounce_rate,
+        metrics.clicks,
+        metrics.content_impression_share,
+        metrics.content_rank_lost_impression_share,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.current_model_attributed_conversions,
+        metrics.current_model_attributed_conversions_value,
+        metrics.engagement_rate,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.percent_new_visitors,
+        metrics.phone_calls,
+        metrics.phone_impressions,
+        metrics.search_absolute_top_impression_share,
+        metrics.search_budget_lost_absolute_top_impression_share,
+        metrics.search_budget_lost_top_impression_share,
+        metrics.search_exact_match_impression_share,
+        metrics.search_impression_share,
+        metrics.search_rank_lost_absolute_top_impression_share,
+        metrics.search_rank_lost_impression_share,
+        metrics.search_rank_lost_top_impression_share,
+        metrics.search_top_impression_share,
+        metrics.top_impression_percentage,
+        metrics.view_through_conversions
+
+      FROM
+        ad_group
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  -
+    filename_prefix: 'ad_group.perf.search,with_impressions,range({{perf_initial_date}}.{{end_date}}).date'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        segments.date,
+
+        metrics.absolute_top_impression_percentage,
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.average_page_views,
+        metrics.average_time_on_site,
+        metrics.bounce_rate,
+        metrics.clicks,
+        metrics.content_impression_share,
+        metrics.content_rank_lost_impression_share,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.current_model_attributed_conversions,
+        metrics.current_model_attributed_conversions_value,
+        metrics.engagement_rate,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.percent_new_visitors,
+        metrics.phone_calls,
+        metrics.phone_impressions,
+        metrics.search_absolute_top_impression_share,
+        metrics.search_budget_lost_absolute_top_impression_share,
+        metrics.search_budget_lost_top_impression_share,
+        metrics.search_exact_match_impression_share,
+        metrics.search_impression_share,
+        metrics.search_rank_lost_absolute_top_impression_share,
+        metrics.search_rank_lost_impression_share,
+        metrics.search_rank_lost_top_impression_share,
+        metrics.search_top_impression_share,
+        metrics.top_impression_percentage,
+        metrics.view_through_conversions
+
+      FROM
+        ad_group
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  #
+  # AdGroup biddable criteria -> keyword
+  # https://developers.google.com/google-ads/api/fields/v2/keyword_view
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  # - metrics.active_view_cpm
+  # - metrics.active_view_ctr
+  # - metrics.active_view_impressions
+  # - metrics.active_view_measurability
+  # - metrics.active_view_measurable_cost_micros
+  # - metrics.active_view_measurable_impressions
+  # - metrics.active_view_viewability
+  # - metrics.gmail_forwards
+  # - metrics.gmail_saves
+  # - metrics.gmail_secondary_clicks
+  # - metrics.video_quartile_100_rate
+  # - metrics.video_quartile_25_rate
+  # - metrics.video_quartile_50_rate
+  # - metrics.video_quartile_75_rate
+  # - metrics.video_view_rate
+  # - metrics.video_views
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.all_conversions_from_interactions_rate
+  # - metrics.all_conversions_from_interactions_value_per_interaction
+  # - metrics.all_conversions_value_per_cost
+  # - metrics.average_cost
+  # - metrics.average_cpc
+  # - metrics.average_cpe
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.conversions_from_interactions_rate
+  # - metrics.cost_per_all_conversions
+  # - metrics.cost_per_conversion
+  # - metrics.cost_per_current_model_attributed_conversion
+  # - metrics.current_model_attributed_conversions_from_interactions_rate
+  # - metrics.current_model_attributed_conversions_from_interactions_value_per_interaction
+  # - metrics.current_model_attributed_conversions_value_per_cost
+  # - metrics.ctr
+  # - metrics.engagement_rate
+  # - metrics.interaction_rate
+  # - metrics.value_per_all_conversions
+  # - metrics.value_per_conversion
+  # - metrics.value_per_current_model_attributed_conversion
+  #
+  # Metrics which can't be requested when using FROM keyword_view
+  # - metrics.search_budget_lost_impression_share,
+  -
+    filename_prefix: 'keyword_view.perf.search,with_impressions,range({{start_date}}.{{end_date}}).unsegmented'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+
+        metrics.absolute_top_impression_percentage,
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.average_page_views,
+        metrics.average_time_on_site,
+        metrics.bounce_rate,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.current_model_attributed_conversions,
+        metrics.current_model_attributed_conversions_value,
+        metrics.engagements,
+        metrics.historical_creative_quality_score,
+        metrics.historical_landing_page_quality_score,
+        metrics.historical_quality_score,
+        metrics.historical_search_predicted_ctr,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.percent_new_visitors,
+        metrics.search_absolute_top_impression_share,
+        metrics.search_budget_lost_absolute_top_impression_share,
+        metrics.search_budget_lost_top_impression_share,
+        metrics.search_click_share,
+        metrics.search_exact_match_impression_share,
+        metrics.search_impression_share,
+        metrics.search_rank_lost_absolute_top_impression_share,
+        metrics.search_rank_lost_impression_share,
+        metrics.search_rank_lost_top_impression_share,
+        metrics.search_top_impression_share,
+        metrics.top_impression_percentage,
+        metrics.view_through_conversions
+
+      FROM
+        keyword_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  -
+    filename_prefix: 'keyword_view.perf.search,with_impressions,range({{perf_initial_date}}.{{end_date}}).date'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+
+        segments.date,
+
+        metrics.absolute_top_impression_percentage,
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.average_page_views,
+        metrics.average_time_on_site,
+        metrics.bounce_rate,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.historical_creative_quality_score,
+        metrics.historical_landing_page_quality_score,
+        metrics.historical_quality_score,
+        metrics.historical_search_predicted_ctr,
+        metrics.impressions,
+        metrics.percent_new_visitors,
+        metrics.search_absolute_top_impression_share,
+        metrics.search_budget_lost_absolute_top_impression_share,
+        metrics.search_budget_lost_top_impression_share,
+        metrics.search_click_share,
+        metrics.search_exact_match_impression_share,
+        metrics.search_impression_share,
+        metrics.search_rank_lost_absolute_top_impression_share,
+        metrics.search_rank_lost_impression_share,
+        metrics.search_rank_lost_top_impression_share,
+        metrics.search_top_impression_share,
+        metrics.top_impression_percentage,
+        metrics.view_through_conversions
+
+      FROM
+        keyword_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  #
+  # AdGroup Ads
+  # https://developers.google.com/google-ads/api/fields/v2/ad_group_ad
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  # - metrics.active_view_cpm
+  # - metrics.active_view_ctr
+  # - metrics.active_view_impressions
+  # - metrics.active_view_measurability
+  # - metrics.active_view_measurable_cost_micros
+  # - metrics.active_view_measurable_impressions
+  # - metrics.active_view_viewability
+  # - metrics.gmail_forwards
+  # - metrics.gmail_saves
+  # - metrics.gmail_secondary_clicks
+  # - metrics.video_quartile_100_rate
+  # - metrics.video_quartile_25_rate
+  # - metrics.video_quartile_50_rate
+  # - metrics.video_quartile_75_rate
+  # - metrics.video_view_rate
+  # - metrics.video_views
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.all_conversions_from_interactions_rate
+  # - metrics.all_conversions_from_interactions_value_per_interaction
+  # - metrics.all_conversions_value_per_cost
+  # - metrics.average_cost
+  # - metrics.average_cpc
+  # - metrics.average_cpe
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.conversions_from_interactions_rate
+  # - metrics.conversions_from_interactions_value_per_interaction
+  # - metrics.conversions_value_per_cost
+  # - metrics.cost_per_all_conversions
+  # - metrics.cost_per_conversion
+  # - metrics.cost_per_current_model_attributed_conversion
+  # - metrics.ctr
+  # - metrics.current_model_attributed_conversions_from_interactions_rate
+  # - metrics.current_model_attributed_conversions_from_interactions_value_per_interaction
+  # - metrics.current_model_attributed_conversions_value_per_cost
+  # - metrics.engagement_rate
+  # - metrics.interaction_rate
+  # - metrics.phone_through_rate
+  # - metrics.value_per_all_conversions
+  # - metrics.value_per_conversion
+  # - metrics.value_per_current_model_attributed_conversion
+  #
+  # Metrics which can't be requested when using FROM keyword_view
+  # - metrics.phone_calls,
+  # - metrics.phone_impressions,
+  -
+    filename_prefix: 'ad_group_ad.perf.search,with_impressions,range({{start_date}}.{{end_date}}).unsegmented'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        ad_group_ad.ad.id,
+
+        metrics.absolute_top_impression_percentage,
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.average_page_views,
+        metrics.average_time_on_site,
+        metrics.bounce_rate,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.current_model_attributed_conversions,
+        metrics.current_model_attributed_conversions_value,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.percent_new_visitors,
+        metrics.top_impression_percentage,
+        metrics.view_through_conversions
+
+      FROM
+        ad_group_ad
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  -
+    filename_prefix: 'ad_group_ad.perf.search,with_impressions,range({{perf_initial_date}}.{{end_date}}).date'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        ad_group_ad.ad.id,
+
+        segments.date,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.average_page_views,
+        metrics.average_time_on_site,
+        metrics.bounce_rate,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.impressions,
+        metrics.percent_new_visitors,
+        metrics.top_impression_percentage
+
+      FROM
+        ad_group_ad
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  #
+  # Feed Item (segmented by campaign to allow search filtering)
+  # https://developers.google.com/google-ads/api/fields/v2/feed_item
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  # - metrics.video_view_rate
+  # - metrics.video_view
+
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.all_conversions_from_interactions_rate
+  # - metrics.average_cost
+  # - metrics.average_cpc
+  # - metrics.average_cpe
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.conversions_from_interactions_rate
+  # - metrics.cost_per_all_conversions
+  # - metrics.cost_per_conversion
+  # - metrics.engagement_rate
+  # - metrics.interaction_rate
+  # - metrics.value_per_all_conversions
+  # - metrics.value_per_conversion
+  -
+    filename_prefix: 'feed_item.perf.search,with_impressions,range({{start_date}}.{{end_date}}).unsegmented'
+    query:
+      SELECT
+
+        customer.id,
+        campaign.id,
+        campaign.advertising_channel_type,
+
+        metrics.absolute_top_impression_percentage,
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.top_impression_percentage
+
+      FROM
+        feed_item
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  #
+  # Extension Feed Item
+  # https://developers.google.com/google-ads/api/fields/v2/extension_feed_item
+  #
+  # Note that as the feed items are associated with campaigns/adgroups via
+  # ExtensionSettings, we can't filter these services by campaign network.
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  # - metrics.video_view_rate
+  # - metrics.video_views
+
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.average_cpc
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.conversions_from_interactions_rate
+  # - metrics.cost_per_all_conversions
+  # - metrics.cost_per_conversion
+  # - metrics.ctr
+  # - metrics.message_chat_rate
+  # - metrics.phone_through_rate
+  -
+    filename_prefix: 'extension_feed_item.perf.enabled,with_impressions,range({{start_date}}.{{end_date}}).unsegmented'
+    query: 
+      SELECT
+
+        customer.id,
+
+        metrics.absolute_top_impression_percentage,
+        metrics.all_conversions,
+        metrics.all_conversions_from_click_to_call,
+        metrics.all_conversions_from_directions,
+        metrics.all_conversions_from_interactions_rate,
+        metrics.all_conversions_from_menu,
+        metrics.all_conversions_from_order,
+        metrics.all_conversions_from_other_engagement,
+        metrics.all_conversions_from_store_visit,
+        metrics.all_conversions_from_store_website,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.impressions,
+        metrics.message_chats,
+        metrics.message_impressions,
+        metrics.phone_calls,
+        metrics.phone_impressions,
+        metrics.top_impression_percentage,
+        metrics.value_per_all_conversions,
+        metrics.value_per_conversion
+
+      FROM
+        extension_feed_item
+      WHERE
+        segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0

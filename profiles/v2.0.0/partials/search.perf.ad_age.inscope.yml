@@ -1,0 +1,88 @@
+# https://developers.google.com/google-ads/api/reference/rpc/google.ads.googleads.v2.resources
+# https://developers.google.com/google-ads/api/docs/reporting/criteria-metrics
+# https://developers.google.com/adwords/api/docs/guides/awql
+
+# NOTE: this variant of these queries doesn't use effectively enabled
+# filtering. It's therefore suitable for use pulling in-scope data. Or if
+# manually re-pulling this perf data at point in time later than the struct
+# snapshot. 
+
+# NOTE: the behaviour of performance queries using week segmentations seems
+# like it's got some bugs at the moment.
+# See the thread at https://www.mail-archive.com/adwords-api@googlegroups.com/msg71983.html
+# On other time range segments the date filter in the where clause is enough,
+# for week, the week segment currently needs to appear in the where.
+
+queries:
+
+  -
+    filename_prefix: 'ad_group_ad.perf.search,with_impressions,range({{end_date_minus_90d}}.{{end_date_minus_30d}}).week'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        ad_group_ad.ad.id,
+
+        segments.week,
+
+        metrics.clicks,
+        metrics.conversions,
+        metrics.cost_micros,
+        metrics.impressions
+
+      FROM
+        ad_group_ad
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.week BETWEEN '{{end_date_minus_90d}}' AND '{{end_date_minus_30d}}'
+        AND metrics.impressions > 0
+
+  -
+    filename_prefix: 'ad_group_ad.perf.search,with_impressions,range({{end_date_minus_365d}}.{{end_date_minus_90d}}).month'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        ad_group_ad.ad.id,
+
+        segments.month,
+
+        metrics.clicks,
+        metrics.conversions,
+        metrics.cost_micros,
+        metrics.impressions
+
+      FROM
+        ad_group_ad
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{end_date_minus_365d}}' AND '{{end_date_minus_90d}}'
+        AND metrics.impressions > 0
+
+  -
+    filename_prefix: 'ad_group_ad.perf.search,with_impressions,range({{end_date_minus_5y}}.{{end_date_minus_365d}}).quarter'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        ad_group_ad.ad.id,
+
+        segments.quarter,
+
+        metrics.clicks,
+        metrics.conversions,
+        metrics.cost_micros,
+        metrics.impressions
+
+      FROM
+        ad_group_ad
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{end_date_minus_5y}}' AND '{{end_date_minus_365d}}'
+        AND metrics.impressions > 0

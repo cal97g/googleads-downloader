@@ -1,0 +1,61 @@
+# https://developers.google.com/google-ads/api/reference/rpc/google.ads.googleads.v2.resources
+# https://developers.google.com/google-ads/api/docs/reporting/criteria-metrics
+# https://developers.google.com/adwords/api/docs/guides/awql
+
+
+queries:
+  #
+  # Account Labels (not state/scope filtered)
+  #
+  -
+    filename_prefix: customer_label.unfiltered
+    query: 
+      SELECT
+
+        customer_label.customer,
+        customer_label.label,
+        customer_label.resource_name
+
+      FROM
+        customer_label
+
+  #
+  # Campaign Labels (not state/scope filtered)
+  #
+  -
+    filename_prefix: campaign_label.search
+    query: 
+      SELECT
+
+        customer.id,
+        campaign_label.campaign,
+        campaign_label.label
+
+      FROM
+        campaign_label
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+
+  #
+  # AdGroup Ad Labels (not state/scope filtered)
+  #
+  -
+    filename_prefix: ad_group_ad_label.search
+    query: 
+      SELECT
+
+        ad_group_ad_label.ad_group_ad,
+        ad_group_ad_label.label,
+        ad_group_ad_label.resource_name,
+
+        label.id,
+        label.name,
+        label.resource_name,
+        label.status,
+        label.text_label.background_color,
+        label.text_label.description
+
+      FROM
+        ad_group_ad_label
+      WHERE
+        campaign.advertising_channel_type = SEARCH

@@ -1,0 +1,77 @@
+version: 2
+
+jobs:
+
+  test:
+    docker:
+      - image: circleci/golang:latest
+    steps:
+      - checkout
+      - run: go test
+
+  deploy-dev:
+    machine: true
+    steps:
+      - checkout
+      - run: sudo apt-get install python
+      - run: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - run: unzip awscliv2.zip
+      - run: sudo ./aws/install        
+      - run: cd platform-build && ./build.sh && ./push-image.sh dev
+      - run: name="Adwords Downloader" env=Dev version=$CIRCLE_SHA1 url=https://admin-dev.ext.perceptaudit.com .circleci/notify-slack.sh
+
+  deploy-staging:
+    machine: true
+    steps:
+      - checkout
+      - run: sudo apt-get install python
+      - run: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - run: unzip awscliv2.zip
+      - run: sudo ./aws/install        
+      - run: cd platform-build && ./build.sh && ./push-image.sh staging
+      - run: name="Adwords Downloader" env=Staging version=$CIRCLE_TAG url=https://admin-staging.ext.perceptaudit.com .circleci/notify-slack.sh
+
+  deploy-prod:
+    machine: true
+    steps:
+      - checkout
+      - run: sudo apt-get install python
+      - run: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - run: unzip awscliv2.zip
+      - run: sudo ./aws/install        
+      - run: cd platform-build && ./build.sh && ./push-image.sh prod
+      - run: name="Adwords Downloader" env=Prod version=$CIRCLE_TAG url=https://admin-prod.ext.perceptaudit.com .circleci/notify-slack.sh
+
+  
+workflows:
+  version: 2
+  test_deploy:
+    jobs:
+      - test:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only: /.*/
+      - deploy-dev:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+      - deploy-staging:
+          requires:
+            - test
+          filters:
+            tags: # limit to tags formatted 'v1.2.3-beta.4'
+              only: /^v[0-9]+(\.[0-9]+)+-(beta|rc).[0-9]+$/
+            branches:
+              ignore: /.*/
+      - deploy-prod:
+          requires:
+            - test
+          filters:
+            tags: # limit to tags formatted 'v1.2.3'
+              only: /^v[0-9]+(\.[0-9]+)+$/
+            branches:
+              ignore: /.*/

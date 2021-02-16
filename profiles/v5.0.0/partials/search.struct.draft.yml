@@ -1,0 +1,135 @@
+# https://developers.google.com/google-ads/api/reference/rpc/google.ads.googleads.v5.resources
+# https://developers.google.com/google-ads/api/docs/reporting/criteria-metrics
+# https://developers.google.com/adwords/api/docs/guides/awql
+
+
+queries:
+  # NOTE: No impressions filtering is applied to this query for draft
+  # campaigns. I'm assuming that drafts can't have impressions.
+  -
+    filename_prefix: campaign.struct.search,enabled,draft
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+
+        campaign.ad_serving_optimization_status,
+        campaign.advertising_channel_sub_type,
+        campaign.advertising_channel_type,
+        campaign.app_campaign_setting.app_id,
+        campaign.app_campaign_setting.app_store,
+        campaign.app_campaign_setting.bidding_strategy_goal_type,
+        campaign.base_campaign,
+        campaign.bidding_strategy,
+        campaign.bidding_strategy_type,
+        campaign.commission.commission_rate_micros,
+        campaign.dynamic_search_ads_setting.domain_name,
+        campaign.dynamic_search_ads_setting.feeds,
+        campaign.dynamic_search_ads_setting.language_code,
+        campaign.dynamic_search_ads_setting.use_supplied_urls_only,
+        campaign.end_date,
+        campaign.experiment_type,
+        campaign.final_url_suffix,
+        campaign.frequency_caps,
+        campaign.geo_target_type_setting.negative_geo_target_type,
+        campaign.geo_target_type_setting.positive_geo_target_type,
+        campaign.hotel_setting.hotel_center_id,
+        campaign.manual_cpc.enhanced_cpc_enabled,
+        campaign.manual_cpm,
+        campaign.manual_cpv,
+        campaign.maximize_conversion_value.target_roas,
+        campaign.maximize_conversions,
+        campaign.name,
+        campaign.network_settings.target_content_network,
+        campaign.network_settings.target_google_search,
+        campaign.network_settings.target_partner_search_network,
+        campaign.network_settings.target_search_network,
+        campaign.payment_mode,
+        campaign.percent_cpc.cpc_bid_ceiling_micros,
+        campaign.percent_cpc.enhanced_cpc_enabled,
+        campaign.real_time_bidding_setting.opt_in,
+        campaign.resource_name,
+        campaign.selective_optimization.conversion_actions,
+        campaign.serving_status,
+        campaign.shopping_setting.campaign_priority,
+        campaign.shopping_setting.enable_local,
+        campaign.shopping_setting.merchant_id,
+        campaign.shopping_setting.sales_country,
+        campaign.start_date,
+        campaign.status,
+        campaign.target_cpa.cpc_bid_ceiling_micros,
+        campaign.target_cpa.cpc_bid_floor_micros,
+        campaign.target_cpa.target_cpa_micros,
+        campaign.target_cpm,
+        campaign.target_impression_share.cpc_bid_ceiling_micros,
+        campaign.target_impression_share.location,
+        campaign.target_impression_share.location_fraction_micros,
+        campaign.target_roas.cpc_bid_ceiling_micros,
+        campaign.target_roas.cpc_bid_floor_micros,
+        campaign.target_roas.target_roas,
+        campaign.target_spend.cpc_bid_ceiling_micros,
+        campaign.target_spend.target_spend_micros,
+        campaign.targeting_setting.target_restrictions,
+        campaign.tracking_setting.tracking_url,
+        campaign.tracking_url_template,
+        campaign.url_custom_parameters,
+        campaign.vanity_pharma.vanity_pharma_display_url_mode,
+        campaign.vanity_pharma.vanity_pharma_text,
+        campaign.video_brand_safety_suitability,
+
+        campaign_budget.amount_micros,
+        campaign_budget.delivery_method,
+        campaign_budget.explicitly_shared,
+        campaign_budget.has_recommended_budget,
+        campaign_budget.id,
+        campaign_budget.name,
+        campaign_budget.period,
+        campaign_budget.recommended_budget_amount_micros,
+        campaign_budget.recommended_budget_estimated_change_weekly_clicks,
+        campaign_budget.recommended_budget_estimated_change_weekly_cost_micros,
+        campaign_budget.recommended_budget_estimated_change_weekly_interactions,
+        campaign_budget.recommended_budget_estimated_change_weekly_views,
+        campaign_budget.reference_count,
+        campaign_budget.resource_name,
+        campaign_budget.status,
+        campaign_budget.total_amount_micros,
+        campaign_budget.type,
+
+        bidding_strategy.enhanced_cpc,
+        bidding_strategy.id,
+        bidding_strategy.name,
+        bidding_strategy.page_one_promoted.bid_modifier,
+        bidding_strategy.page_one_promoted.cpc_bid_ceiling_micros,
+        bidding_strategy.page_one_promoted.only_raise_cpc_bids,
+        bidding_strategy.page_one_promoted.raise_cpc_bid_when_budget_constrained,
+        bidding_strategy.page_one_promoted.raise_cpc_bid_when_quality_score_is_low,
+        bidding_strategy.page_one_promoted.strategy_goal,
+        bidding_strategy.resource_name,
+        bidding_strategy.status,
+        bidding_strategy.target_cpa.cpc_bid_ceiling_micros,
+        bidding_strategy.target_cpa.cpc_bid_floor_micros,
+        bidding_strategy.target_cpa.target_cpa_micros,
+        bidding_strategy.target_impression_share.cpc_bid_ceiling_micros,
+        bidding_strategy.target_impression_share.location,
+        bidding_strategy.target_impression_share.location_fraction_micros,
+        bidding_strategy.target_outrank_share.competitor_domain,
+        bidding_strategy.target_outrank_share.cpc_bid_ceiling_micros,
+        bidding_strategy.target_outrank_share.only_raise_cpc_bids,
+        bidding_strategy.target_outrank_share.raise_cpc_bid_when_quality_score_is_low,
+        bidding_strategy.target_outrank_share.target_outrank_share_micros,
+        bidding_strategy.target_roas.cpc_bid_ceiling_micros,
+        bidding_strategy.target_roas.cpc_bid_floor_micros,
+        bidding_strategy.target_roas.target_roas,
+        bidding_strategy.target_spend.cpc_bid_ceiling_micros,
+        bidding_strategy.target_spend.target_spend_micros,
+        bidding_strategy.type
+
+      FROM
+        campaign
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND campaign.experiment_type = DRAFT
+
+      PARAMETERS include_drafts=true

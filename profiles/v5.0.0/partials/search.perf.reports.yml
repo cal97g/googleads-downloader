@@ -1,0 +1,1274 @@
+# https://developers.google.com/google-ads/api/reference/rpc/google.ads.googleads.v5.resources
+# https://developers.google.com/google-ads/api/docs/reporting/criteria-metrics
+# https://developers.google.com/adwords/api/docs/guides/awql
+
+# NOTE: We don't apply enabled filtering on perf, so we may get performance
+# for data that isn't in our effectively enabled or in-scope datasets.
+# However this allows us to re-pull perf data retrospectively without concern
+# about entity states.
+
+
+queries:
+
+  #
+  # Search term view (SQR)
+  # https://developers.google.com/google-ads/api/fields/v5/search_term_view
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  # - metrics.interaction_event_types : same as clicks on search?
+  # - metrics.interaction_rate : same as ctr on search?
+  # - metrics.interactions :same as impressions on search?
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.all_conversions_from_interactions_rate
+  # - metrics.all_conversions_from_interactions_value_per_interaction
+  # - metrics.all_conversions_value_per_cost
+  # - metrics.average_cost
+  # - metrics.average_cpc
+  # - metrics.average_cpe
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.conversions_from_interactions_rate
+  # - metrics.conversions_value_per_cost
+  # - metrics.cost_per_all_conversions 
+  # - metrics.cost_per_conversion
+  # - metrics.ctr
+  # - metrics.engagement_rate
+  # - metrics.value_per_all_conversions
+  # - metrics.value_per_conversion
+  -
+    filename_prefix: 'search_term_view.perf.search,keyword,with_impressions.range({{perf_initial_date}}.{{end_date}}).date'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        campaign.base_campaign,
+        campaign.end_date,
+        campaign.experiment_type,
+        campaign.name,
+        campaign.serving_status,
+        campaign.start_date,
+        campaign.status,
+
+        ad_group.name,
+        ad_group.status,
+        ad_group.type,
+    
+        search_term_view.search_term,
+        search_term_view.resource_name,
+        search_term_view.status,
+
+        segments.date,
+        segments.keyword.ad_group_criterion,
+        segments.keyword.info.match_type,
+        segments.keyword.info.text,
+        
+        metrics.absolute_top_impression_percentage,
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_from_interactions_value_per_interaction,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.engagements,
+        metrics.impressions, 
+        metrics.top_impression_percentage,
+        metrics.view_through_conversions
+
+      FROM
+        search_term_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND metrics.impressions > 0
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+
+  #
+  # Search term view (SQR) - Supplemental query
+  # https://developers.google.com/google-ads/api/fields/v5/search_term_view
+  #
+  # This supplemental query was added to allow separate collation of search term match types
+  # to triggered keyword match types, including performance values.
+  # NOTE: care should be taken to consume performance values for only one of the search term queries,
+  # and this particular result set should be used for aggregating segmented performance values only. 
+  -
+    filename_prefix: 'search_term_view.perf.search,search_term_match_type,keyword_match_type,with_impressions.range({{perf_initial_date}}.{{end_date}}).date'
+    query:
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        search_term_view.search_term,
+
+        segments.date,
+        segments.keyword.ad_group_criterion,
+        segments.search_term_match_type,
+        segments.keyword.info.match_type,
+        segments.keyword.info.text,
+
+        metrics.absolute_top_impression_percentage,
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_from_interactions_value_per_interaction,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.engagements,
+        metrics.impressions, 
+        metrics.top_impression_percentage,
+        metrics.view_through_conversions
+
+      FROM
+        search_term_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND metrics.impressions > 0
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+
+  #
+  # Dynamic Search Ads Search Term View
+  # https://developers.google.com/google-ads/api/fields/v5/dynamic_search_ads_search_term_view
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.average_cpc,
+  # - metrics.average_cpm,
+  # - metrics.conversions_from_interactions_rate,
+  # - metrics.cost_per_all_conversions,
+  # - metrics.cost_per_conversion,
+  # - metrics.ctr,
+  # - metrics.value_per_all_conversions,
+  # - metrics.value_per_conversion
+  -
+    filename_prefix: 'dynamic_search_ads_search_term_view.perf.search,with_impressions.range({{perf_initial_date}}.{{end_date}}).date'
+    query: 
+      SELECT
+
+        dynamic_search_ads_search_term_view.headline,
+        dynamic_search_ads_search_term_view.landing_page,
+        dynamic_search_ads_search_term_view.page_url,
+        dynamic_search_ads_search_term_view.resource_name,
+        dynamic_search_ads_search_term_view.search_term,
+
+        segments.date,
+
+        metrics.all_conversions,
+        metrics.all_conversions_from_interactions_rate,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.impressions
+
+      FROM
+        dynamic_search_ads_search_term_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND metrics.impressions > 0
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+
+  #
+  # Expanded Landing Page View
+  # https://developers.google.com/google-ads/api/fields/v5/expanded_landing_page_view
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  # - metrics.active_view_cpm
+  # - metrics.active_view_ctr
+  # - metrics.active_view_impressions
+  # - metrics.active_view_measurability
+  # - metrics.active_view_measurable_cost_micros
+  # - metrics.active_view_measurable_impressions
+  # - metrics.active_view_viewability
+  # - metrics.video_view_rate
+  # - metrics.video_views
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.all_conversions_value_per_cost
+  # - metrics.average_cost
+  # - metrics.average_cpc
+  # - metrics.average_cpe
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.conversions_value_per_cost
+  # - metrics.all_conversions_from_interactions_rate
+  # - metrics.all_conversions_from_interactions_value_per_interaction
+  # - metrics.conversions_from_interactions_rate
+  # - metrics.conversions_from_interactions_value_per_interaction
+  # - metrics.cost_per_all_conversions
+  # - metrics.cost_per_conversion
+  # - metrics.engagement_rate
+  # - metrics.interaction_rate
+  # - metrics.value_per_all_conversions
+  # - metrics.value_per_conversion
+  
+  # Unsegmented across the entire account
+  -
+    filename_prefix: 'expanded_landing_page_view.perf.search,with_impressions,range({{perf_initial_date}}.{{end_date}}).unsegmented'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.advertising_channel_type,
+
+        expanded_landing_page_view.expanded_final_url,
+        expanded_landing_page_view.resource_name,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.mobile_friendly_clicks_percentage,
+        metrics.speed_score,
+        metrics.valid_accelerated_mobile_pages_clicks_percentage
+
+      FROM
+        expanded_landing_page_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND metrics.impressions > 0
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+
+  # Segmented by date
+  -
+    filename_prefix: 'expanded_landing_page_view.perf.search,with_impressions,range({{perf_initial_date}}.{{end_date}}).date'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.advertising_channel_type,
+
+        segments.date,
+
+        expanded_landing_page_view.expanded_final_url,
+        expanded_landing_page_view.resource_name,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.mobile_friendly_clicks_percentage,
+        metrics.speed_score,
+        metrics.valid_accelerated_mobile_pages_clicks_percentage
+
+      FROM
+        expanded_landing_page_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND metrics.impressions > 0
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+
+  # Segmented by ad group
+  -
+    filename_prefix: 'expanded_landing_page_view.perf.search,with_impressions,range({{perf_initial_date}}.{{end_date}}).adgroup'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        campaign.advertising_channel_type,
+
+        expanded_landing_page_view.expanded_final_url,
+        expanded_landing_page_view.resource_name,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.mobile_friendly_clicks_percentage,
+        metrics.speed_score,
+        metrics.valid_accelerated_mobile_pages_clicks_percentage
+
+      FROM
+        expanded_landing_page_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND metrics.impressions > 0
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+
+  #
+  # User Location View
+  # https://developers.google.com/google-ads/api/fields/v5/user_location_view
+  #
+  # Note that we need to segment by campaign in order to apply the advertising
+  # channel filtering. We can't get aggregate account performance with that
+  # filter
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  # - metrics.video_view_rate
+  # - metrics.video_views
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.all_conversions_from_interactions_rate
+  # - metrics.average_cost
+  # - metrics.average_cpc
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.conversions_from_interactions_rate
+  # - metrics.cost_per_all_conversions
+  # - metrics.cost_per_conversion
+  # - metrics.ctr
+  # - metrics.interaction_rate
+  # - metrics.value_per_all_conversions
+  # - metrics.value_per_conversion
+  #
+  # Segmented by campaign 
+  -
+    filename_prefix: 'user_location_view.perf.search,range({{start_date}}.{{end_date}}).campaign'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        campaign.advertising_channel_type,
+
+        user_location_view.country_criterion_id,
+        user_location_view.resource_name,
+        user_location_view.targeting_location,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.view_through_conversions
+
+      FROM
+        user_location_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND metrics.impressions > 0
+        AND segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+
+  # Segmented by ad group
+  -
+    filename_prefix: 'user_location_view.perf.search,range({{start_date}}.{{end_date}}).adgroup'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        campaign.advertising_channel_type,
+
+        user_location_view.country_criterion_id,
+        user_location_view.resource_name,
+        user_location_view.targeting_location,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.view_through_conversions
+
+      FROM
+        user_location_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND metrics.impressions > 0
+        AND segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+
+  #
+  # Age Range View (by ad group)
+  # https://developers.google.com/google-ads/api/fields/v5/age_range_view
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  #
+  # - metrics.active_view_impressions
+  # - metrics.active_view_measurability
+  # - metrics.active_view_measurable_cost_micros
+  # - metrics.active_view_measurable_impressions
+  # - metrics.active_view_viewability
+  # - metrics.gmail_forwards
+  # - metrics.gmail_saves
+  # - metrics.gmail_secondary_clicks
+  # - metrics.video_quartile_p100_rate
+  # - metrics.video_quartile_p25_rate
+  # - metrics.video_quartile_p50_rate
+  # - metrics.video_quartile_p75_rate
+  # - metrics.video_view_rate
+  # - metrics.video_views
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.active_view_cpm
+  # - metrics.active_view_ctr
+  # - metrics.all_conversions_from_interactions_rate
+  # - metrics.all_conversions_from_interactions_value_per_interaction
+  # - metrics.all_conversions_value_per_cost
+  # - metrics.average_cost
+  # - metrics.average_cpc
+  # - metrics.average_cpe
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.conversions_from_interactions_rate
+  # - metrics.cost_per_all_conversions
+  # - metrics.cost_per_conversion
+  # - metrics.engagement_rate
+  # - metrics.value_per_all_conversions
+  # - metrics.value_per_conversion
+  -
+    filename_prefix: 'age_range_view.perf.search,with_impressions,range({{start_date}}.{{end_date}}).unsegmented'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id, 
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+
+        ad_group_criterion.age_range.type,
+        ad_group_criterion.approval_status,
+        ad_group_criterion.bid_modifier,
+        ad_group_criterion.status,
+        ad_group_criterion.system_serving_status,
+        ad_group_criterion.type,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interaction_rate,
+        metrics.interactions,
+        metrics.view_through_conversions
+
+      FROM
+        age_range_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND metrics.impressions > 0
+        AND segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+
+  -
+    filename_prefix: 'age_range_view.perf.search,with_impressions,range({{perf_initial_date}}.{{end_date}}).date'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id, 
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+
+        segments.date,
+
+        ad_group_criterion.age_range.type,
+        ad_group_criterion.approval_status,
+        ad_group_criterion.bid_modifier,
+        ad_group_criterion.status,
+        ad_group_criterion.system_serving_status,
+        ad_group_criterion.type,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interaction_rate,
+        metrics.interactions,
+        metrics.view_through_conversions
+
+      FROM
+        age_range_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND metrics.impressions > 0
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+
+  #
+  # Gender View (by ad group)
+  # https://developers.google.com/google-ads/api/fields/v5/gender_view
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  #  - metrics.active_view_cpm
+  #  - metrics.active_view_ctr
+  #  - metrics.active_view_impressions
+  #  - metrics.active_view_measurability
+  #  - metrics.active_view_measurable_cost_micros
+  #  - metrics.active_view_measurable_impressions
+  #  - metrics.active_view_viewability
+  #  - metrics.gmail_forwards
+  #  - metrics.gmail_saves
+  #  - metrics.gmail_secondary_clicks
+  #  - metrics.video_quartile_p100_rate
+  #  - metrics.video_quartile_p25_rate
+  #  - metrics.video_quartile_p50_rate
+  #  - metrics.video_quartile_p75_rate
+  #  - metrics.video_view_rate
+  #  - metrics.video_views
+  #
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.all_conversions_from_interactions_rate
+  # - metrics.all_conversions_from_interactions_value_per_interaction
+  # - metrics.all_conversions_value_per_cost
+  # - metrics.average_cost
+  # - metrics.average_cpc
+  # - metrics.average_cpe
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.conversions_from_interactions_rate
+  # - metrics.cost_per_all_conversions
+  # - metrics.cost_per_conversion
+  # - metrics.engagement_rate
+  # - metrics.interaction_rate
+  # - metrics.value_per_all_conversions
+  # - metrics.value_per_conversion
+  -
+    filename_prefix: 'gender_view.perf.search,with_impressions,range({{start_date}}.{{end_date}}).unsegmented'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+
+        ad_group_criterion.approval_status,
+        ad_group_criterion.bid_modifier,
+        ad_group_criterion.gender.type,
+        ad_group_criterion.negative,
+        ad_group_criterion.status,
+        ad_group_criterion.system_serving_status,
+        ad_group_criterion.type,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.view_through_conversions
+
+      FROM
+        gender_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND metrics.impressions > 0
+        AND segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+
+  -
+    filename_prefix: 'gender_view.perf.search,with_impressions,range({{perf_initial_date}}.{{end_date}}).date'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+
+        segments.date,
+
+        ad_group_criterion.approval_status,
+        ad_group_criterion.bid_modifier,
+        ad_group_criterion.gender.type,
+        ad_group_criterion.negative,
+        ad_group_criterion.status,
+        ad_group_criterion.system_serving_status,
+        ad_group_criterion.type,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.view_through_conversions
+
+      FROM
+        gender_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND metrics.impressions > 0
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'      
+
+  #
+  # Paid/Organic Search Term View (by ad group)
+  # https://developers.google.com/google-ads/api/fields/v5/gender_view
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  #  - metrics.active_view_cpm
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.average_cpc
+  # - metrics.combined_clicks_per_query
+  # - metrics.ctr
+  # - metrics.organic_clicks_per_query
+  # - metrics.organic_impressions_per_query
+  -
+    filename_prefix: 'paid_organic_search_term_view.perf.search,with_impressions,range({{start_date}}.{{end_date}}).unsegmented'
+    query:
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        paid_organic_search_term_view.resource_name,
+        paid_organic_search_term_view.search_term,
+
+        metrics.clicks,
+        metrics.combined_clicks,
+        metrics.combined_queries,
+        metrics.impressions,
+        metrics.organic_clicks,
+        metrics.organic_impressions,
+        metrics.organic_queries
+
+      FROM
+        paid_organic_search_term_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND metrics.impressions > 0
+        AND segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+
+  -
+    filename_prefix: 'paid_organic_search_term_view.perf.search,with_impressions,range({{perf_initial_date}}.{{end_date}}).date'
+    query:
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        segments.date,
+
+        paid_organic_search_term_view.resource_name,
+        paid_organic_search_term_view.search_term,
+
+        metrics.clicks,
+        metrics.combined_clicks,
+        metrics.combined_queries,
+        metrics.impressions,
+        metrics.organic_clicks,
+        metrics.organic_impressions,
+        metrics.organic_queries
+
+      FROM
+        paid_organic_search_term_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND metrics.impressions > 0
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+
+  #
+  # Display Keyword View
+  # https://developers.google.com/google-ads/api/fields/v5/display_keyword_view
+  #
+  # TODO: is it even possible to have results in this view when filtered to search campaigns?
+  # Does anything appear in here for example on some search + display campaigns?
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  # - metrics.active_view_cpm
+  # - metrics.active_view_ctr
+  # - metrics.active_view_impressions
+  # - metrics.active_view_measurability
+  # - metrics.active_view_measurable_cost_micros
+  # - metrics.active_view_measurable_impressions
+  # - metrics.active_view_viewability
+  # - metrics.gmail_forwards
+  # - metrics.gmail_saves
+  # - metrics.gmail_secondary_clicks
+  # - metrics.video_quartile_p100_rate
+  # - metrics.video_quartile_p25_rate
+  # - metrics.video_quartile_p50_rate
+  # - metrics.video_quartile_p75_rate
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.all_conversions_from_interactions_rate
+  # - metrics.all_conversions_from_interactions_value_per_interaction
+  # - metrics.all_conversions_value_per_cost
+  # - metrics.average_cost
+  # - metrics.average_cpc
+  # - metrics.average_cpe
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.conversions_from_interactions_rate
+  # - metrics.cost_per_all_conversions
+  # - metrics.cost_per_conversion
+  # - metrics.engagement_rate
+  # - metrics.interaction_rate
+  -
+    filename_prefix: 'display_keyword_view.perf.search,with_impressions,range({{start_date}}.{{end_date}}).unsegmented'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.value_per_all_conversions,
+        metrics.value_per_conversion
+
+      FROM
+        display_keyword_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  -
+    filename_prefix: 'display_keyword_view.perf.search,with_impressions,range({{perf_initial_date}}.{{end_date}}).date'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+
+        segments.date,
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.value_per_all_conversions,
+        metrics.value_per_conversion
+
+      FROM
+        display_keyword_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  #
+  # Detail Placement View
+  # https://developers.google.com/google-ads/api/fields/v5/detail_placement_view
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  # - metrics.active_view_cpm
+  # - metrics.active_view_ctr
+  # - metrics.active_view_impressions
+  # - metrics.active_view_measurability
+  # - metrics.active_view_measurable_cost_micros
+  # - metrics.active_view_measurable_impressions
+  # - metrics.active_view_viewability
+  # - metrics.video_quartile_p100_rate
+  # - metrics.video_quartile_p25_rate
+  # - metrics.video_quartile_p50_rate
+  # - metrics.video_quartile_p75_rate
+  # - metrics.video_view_rate
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.all_conversions_from_interactions_rate
+  # - metrics.average_cpc
+  # - metrics.average_cpe
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.cost_per_all_conversions
+  # - metrics.cost_per_conversion
+  # - metrics.engagement_rate
+  # - metrics.interaction_rate
+  # - metrics.value_per_all_conversions
+  # - metrics.value_per_conversion
+  -
+    filename_prefix: 'detail_placement_view.perf.search,with_impressions,range({{start_date}}.{{end_date}}).unsegmented'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        detail_placement_view.display_name,
+        detail_placement_view.group_placement_target_url,
+        detail_placement_view.placement,
+        detail_placement_view.placement_type,
+        detail_placement_view.resource_name,
+        detail_placement_view.target_url,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.average_cost,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions
+
+      FROM
+        detail_placement_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  -
+    filename_prefix: 'detail_placement_view.perf.search,with_impressions,range({{perf_initial_date}}.{{end_date}}).date'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        segments.date,
+
+        detail_placement_view.display_name,
+        detail_placement_view.group_placement_target_url,
+        detail_placement_view.placement,
+        detail_placement_view.placement_type,
+        detail_placement_view.resource_name,
+        detail_placement_view.target_url,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.average_cost,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions
+
+      FROM
+        detail_placement_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  #
+  # Managed Placement View
+  # https://developers.google.com/google-ads/api/fields/v5/managed_placement_view
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  # - metrics.active_view_cpm
+  # - metrics.active_view_ctr
+  # - metrics.active_view_impressions
+  # - metrics.active_view_measurability
+  # - metrics.active_view_measurable_cost_micros
+  # - metrics.active_view_measurable_impressions
+  # - metrics.active_view_viewability
+  # - metrics.gmail_forwards
+  # - metrics.gmail_saves
+  # - metrics.gmail_secondary_clicks
+  # - metrics.video_quartile_p100_rate
+  # - metrics.video_quartile_p25_rate
+  # - metrics.video_quartile_p50_rate
+  # - metrics.video_quartile_p75_rate
+  # - metrics.video_view_rate
+  # - metrics.video_views
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.all_conversions_from_interactions_rate
+  # - metrics.all_conversions_from_interactions_value_per_interaction
+  # - metrics.all_conversions_value_per_cost
+  # - metrics.average_cost
+  # - metrics.average_cpc
+  # - metrics.average_cpe
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.conversions_from_interactions_rate
+  # - metrics.cost_per_all_conversions
+  # - metrics.cost_per_conversion
+  # - metrics.engagement_rate
+  # - metrics.interaction_rate
+  # - metrics.value_per_all_conversions
+  # - metrics.value_per_conversion
+  -
+      filename_prefix: 'managed_placement_view.perf.search,with_impressions,range({{start_date}}.{{end_date}}).unsegmented'
+      query: 
+        SELECT
+
+          customer.id,
+          campaign.id,
+          ad_group.id,
+          ad_group_criterion.criterion_id,
+
+          managed_placement_view.resource_name,
+
+          metrics.all_conversions,
+          metrics.all_conversions_value,
+          metrics.clicks,
+          metrics.conversions,
+          metrics.conversions_value,
+          metrics.cost_micros,
+          metrics.cross_device_conversions,
+          metrics.ctr,
+          metrics.engagements,
+          metrics.impressions,
+          metrics.interaction_event_types,
+          metrics.interactions,
+          metrics.view_through_conversions
+
+        FROM
+          managed_placement_view
+        WHERE
+          campaign.advertising_channel_type = SEARCH
+          AND segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+          AND metrics.impressions > 0
+
+  -
+      filename_prefix: 'managed_placement_view.perf.search,with_impressions,range({{perf_initial_date}}.{{end_date}}).date'
+      query: 
+        SELECT
+
+          customer.id,
+          campaign.id,
+          ad_group.id,
+          ad_group_criterion.criterion_id,
+
+          managed_placement_view.resource_name,
+
+          segments.date,
+
+          metrics.all_conversions,
+          metrics.all_conversions_value,
+          metrics.clicks,
+          metrics.conversions,
+          metrics.conversions_value,
+          metrics.cost_micros,
+          metrics.cross_device_conversions,
+          metrics.ctr,
+          metrics.engagements,
+          metrics.impressions,
+          metrics.interaction_event_types,
+          metrics.interactions,
+          metrics.view_through_conversions
+
+        FROM
+          managed_placement_view
+        WHERE
+          campaign.advertising_channel_type = SEARCH
+          AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+          AND metrics.impressions > 0
+
+  #
+  # Group Placement View
+  # https://developers.google.com/google-ads/api/fields/v5/group_placement_view
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  # - metrics.active_view_cpm
+  # - metrics.active_view_ctr
+  # - metrics.active_view_impressions
+  # - metrics.active_view_measurability
+  # - metrics.active_view_measurable_cost_micros
+  # - metrics.active_view_measurable_impressions
+  # - metrics.active_view_viewability
+  # - metrics.video_view_rate
+  # - metrics.video_views
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.all_conversions_from_interactions_rate
+  # - metrics.all_conversions_value_per_cost
+  # - metrics.average_cost
+  # - metrics.average_cpc
+  # - metrics.average_cpe
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.conversions_from_interactions_rate
+  # - metrics.cost_per_all_conversions
+  # - metrics.cost_per_conversion
+  # - metrics.engagement_rate
+  # - metrics.interaction_rate
+  # - metrics.value_per_all_conversions
+  # - metrics.value_per_conversion
+  -
+    filename_prefix: 'group_placement_view.perf.search,with_impressions,range({{start_date}}.{{end_date}}).unsegmented'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        group_placement_view.display_name,
+        group_placement_view.placement,
+        group_placement_view.placement_type,
+        group_placement_view.resource_name,
+        group_placement_view.target_url,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.view_through_conversions
+
+      FROM
+        group_placement_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  -
+    filename_prefix: 'group_placement_view.perf.search,with_impressions,range({{perf_initial_date}}.{{end_date}}).date'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        group_placement_view.display_name,
+        group_placement_view.placement,
+        group_placement_view.placement_type,
+        group_placement_view.resource_name,
+        group_placement_view.target_url,
+
+        segments.date,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.view_through_conversions
+
+      FROM
+        group_placement_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+        AND metrics.impressions > 0
+
+  #
+  # Feed Placeholder View
+  # https://developers.google.com/google-ads/api/fields/v5/feed_placeholder_view
+  #
+  # Metrics which don't make sense to be requesting on search campaigns
+  # - metrics.video_view_rate
+  # - metrics.video_views
+  #
+  # Derived metrics which we can compute so don't need to be requesting
+  # - metrics.all_conversions_from_interactions_rate
+  # - metrics.average_cost
+  # - metrics.average_cpc
+  # - metrics.average_cpe
+  # - metrics.average_cpm
+  # - metrics.average_cpv
+  # - metrics.conversions_from_interactions_rate
+  # - metrics.cost_per_all_conversions
+  # - metrics.cost_per_conversion
+  # - metrics.engagement_rate
+  # - metrics.interaction_rate
+  # - metrics.value_per_all_conversions
+  # - metrics.value_per_conversion
+       
+  -
+    filename_prefix: 'feed_placeholder_view.perf.search,with_impressions,range({{start_date}}.{{end_date}}).unsegmented'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        campaign.advertising_channel_type,
+
+        feed_placeholder_view.placeholder_type,
+        feed_placeholder_view.resource_name,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.view_through_conversions
+
+      FROM
+        feed_placeholder_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{start_date}}' AND '{{end_date}}'
+        AND metrics.clicks > 0      
+
+  -
+    filename_prefix: 'feed_placeholder_view.perf.search,with_impressions,range({{perf_initial_date}}.{{end_date}}).date'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        campaign.advertising_channel_type,
+
+        feed_placeholder_view.placeholder_type,
+        feed_placeholder_view.resource_name,
+
+        segments.date,
+
+        metrics.all_conversions,
+        metrics.all_conversions_value,
+        metrics.clicks,
+        metrics.conversions,
+        metrics.conversions_value,
+        metrics.cost_micros,
+        metrics.cross_device_conversions,
+        metrics.ctr,
+        metrics.engagements,
+        metrics.impressions,
+        metrics.interaction_event_types,
+        metrics.interactions,
+        metrics.view_through_conversions
+
+      FROM
+        feed_placeholder_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{perf_initial_date}}' AND '{{end_date}}'
+        AND metrics.clicks > 0        
+
+  #
+  # Click View
+  # https://developers.google.com/google-ads/api/fields/v5/click_view
+  #
+  -
+    filename_prefix: 'click_view.perf.search,with_clicks,range({{end_date}}.{{end_date}}).unsegmented'
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        campaign.advertising_channel_type,
+
+        click_view.area_of_interest.city,
+        click_view.area_of_interest.country,
+        click_view.area_of_interest.metro,
+        click_view.area_of_interest.most_specific,
+        click_view.area_of_interest.region,
+        click_view.gclid,
+        click_view.location_of_presence.city,
+        click_view.location_of_presence.country,
+        click_view.location_of_presence.metro,
+        click_view.location_of_presence.most_specific,
+        click_view.location_of_presence.region,
+        click_view.page_number,
+        click_view.resource_name,
+
+        metrics.clicks
+
+      FROM
+        click_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND segments.date BETWEEN '{{end_date}}' AND '{{end_date}}'
+        AND metrics.clicks > 0

@@ -1,0 +1,40 @@
+# https://developers.google.com/google-ads/api/reference/rpc/google.ads.googleads.v5.resources
+# https://developers.google.com/google-ads/api/docs/reporting/criteria-metrics
+# https://developers.google.com/adwords/api/docs/guides/awql
+
+
+queries:
+  -
+    filename_prefix: recommendation
+    query:
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        campaign_budget.id,
+
+        recommendation.ad_group,
+        recommendation.call_extension_recommendation,
+        recommendation.callout_extension_recommendation,
+        recommendation.campaign,
+        recommendation.campaign_budget,
+        recommendation.campaign_budget_recommendation,
+        recommendation.dismissed,
+        recommendation.enhanced_cpc_opt_in_recommendation,
+        recommendation.impact,
+        recommendation.keyword_match_type_recommendation,
+        recommendation.keyword_recommendation,
+        recommendation.maximize_clicks_opt_in_recommendation,
+        recommendation.maximize_conversions_opt_in_recommendation,
+        recommendation.move_unused_budget_recommendation,
+        recommendation.optimize_ad_rotation_recommendation,
+        recommendation.resource_name,
+        recommendation.search_partners_opt_in_recommendation,
+        recommendation.sitelink_extension_recommendation,
+        recommendation.target_cpa_opt_in_recommendation,
+        recommendation.text_ad_recommendation,
+        recommendation.type
+
+      FROM
+        recommendation

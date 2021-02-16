@@ -1,0 +1,126 @@
+# https://developers.google.com/google-ads/api/reference/rpc/google.ads.googleads.v5.resources
+# https://developers.google.com/google-ads/api/docs/reporting/criteria-metrics
+# https://developers.google.com/adwords/api/docs/guides/awql
+
+
+queries:
+  -
+    filename_prefix: geo_target_constant.enabled
+    query:
+      SELECT
+
+        geo_target_constant.canonical_name,
+        geo_target_constant.country_code,
+        geo_target_constant.id,
+        geo_target_constant.name,
+        geo_target_constant.resource_name,
+        geo_target_constant.status,
+        geo_target_constant.target_type
+
+      FROM
+        geo_target_constant
+      WHERE
+        geo_target_constant.status = ENABLED
+
+  -
+    filename_prefix: language_constant.unfiltered
+    query:
+      SELECT
+
+        language_constant.code,
+        language_constant.id,
+        language_constant.name,
+        language_constant.resource_name,
+        language_constant.targetable
+
+      FROM
+        language_constant
+
+  -
+    filename_prefix: mobile_app_category_constant.unfiltered
+    query:
+      SELECT
+
+        mobile_app_category_constant.id,
+        mobile_app_category_constant.name,
+        mobile_app_category_constant.resource_name
+
+      FROM
+        mobile_app_category_constant
+
+  -
+    filename_prefix: mobile_device_constant.unfiltered
+    query:
+      SELECT
+
+        mobile_device_constant.id,
+        mobile_device_constant.manufacturer_name,
+        mobile_device_constant.name,
+        mobile_device_constant.operating_system_name,
+        mobile_device_constant.resource_name,
+        mobile_device_constant.type
+
+      FROM
+        mobile_device_constant
+
+  -
+    filename_prefix: operating_system_version_constant.unfiltered
+    query:
+      SELECT
+
+        operating_system_version_constant.id,
+        operating_system_version_constant.name,
+        operating_system_version_constant.operator_type,
+        operating_system_version_constant.os_major_version,
+        operating_system_version_constant.os_minor_version,
+        operating_system_version_constant.resource_name
+
+      FROM
+        operating_system_version_constant
+
+  -
+    filename_prefix: product_bidding_category_constant.unfiltered
+    query:
+      SELECT
+
+        product_bidding_category_constant.country_code,
+        product_bidding_category_constant.id,
+        product_bidding_category_constant.language_code,
+        product_bidding_category_constant.level,
+        product_bidding_category_constant.localized_name,
+        product_bidding_category_constant.product_bidding_category_constant_parent,
+        product_bidding_category_constant.resource_name,
+        product_bidding_category_constant.status
+
+      FROM
+        product_bidding_category_constant
+
+  -
+    filename_prefix: topic_constant.unfiltered
+    query:
+      SELECT
+
+        topic_constant.id,
+        topic_constant.path,
+        topic_constant.resource_name,
+        topic_constant.topic_constant_parent
+
+      FROM
+        topic_constant
+
+  #
+  # Currency Constant
+  #
+  -
+    filename_prefix: currency_constant.struct.unfiltered
+    query: 
+      SELECT
+
+        currency_constant.billable_unit_micros,
+        currency_constant.code,
+        currency_constant.name,
+        currency_constant.resource_name,
+        currency_constant.symbol
+
+      FROM
+        currency_constant          

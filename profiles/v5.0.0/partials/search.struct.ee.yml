@@ -1,0 +1,2249 @@
+# https://developers.google.com/google-ads/api/reference/rpc/google.ads.googleads.v5.resources
+# https://developers.google.com/google-ads/api/docs/reporting/criteria-metrics
+# https://developers.google.com/adwords/api/docs/guides/awql
+
+
+queries:
+
+  #
+  # Customer (account)
+  #
+  -
+    filename_prefix: customer.struct.unfiltered
+    query: 
+      SELECT
+
+        customer.id,
+
+        customer.auto_tagging_enabled,
+        customer.call_reporting_setting.call_conversion_action,
+        customer.call_reporting_setting.call_conversion_reporting_enabled,
+        customer.call_reporting_setting.call_reporting_enabled,
+        customer.conversion_tracking_setting.conversion_tracking_id,
+        customer.conversion_tracking_setting.cross_account_conversion_tracking_id,
+        customer.currency_code,
+        customer.descriptive_name,
+        customer.final_url_suffix,
+        customer.has_partners_badge,
+        customer.manager,
+        customer.optimization_score,        
+        customer.pay_per_conversion_eligibility_failure_reasons,
+        customer.remarketing_setting.google_global_site_tag,
+        customer.resource_name,
+        customer.test_account,
+        customer.time_zone,
+        customer.tracking_url_template
+
+      FROM
+        customer
+
+
+  #
+  # Currency Constant
+  #
+  -
+    filename_prefix: currency_constant.struct.unfiltered
+    query: 
+      SELECT
+
+        currency_constant.billable_unit_micros,
+        currency_constant.code,
+        currency_constant.name,
+        currency_constant.resource_name,
+        currency_constant.symbol
+
+      FROM
+        currency_constant        
+
+  #
+  # Customer (account) negative criterion
+  #
+  -
+    filename_prefix: customer_negative_criterion.struct.unfiltered
+    query:
+      SELECT
+
+        customer.id,
+
+        customer_negative_criterion.content_label.type,
+        customer_negative_criterion.id,
+        customer_negative_criterion.mobile_app_category.mobile_app_category_constant,
+        customer_negative_criterion.mobile_application.app_id,
+        customer_negative_criterion.mobile_application.name,
+        customer_negative_criterion.placement.url,
+        customer_negative_criterion.resource_name,
+        customer_negative_criterion.type,
+        customer_negative_criterion.youtube_channel.channel_id,
+        customer_negative_criterion.youtube_video.video_id
+
+      FROM
+        customer_negative_criterion
+
+  #
+  # Account Budget
+  #
+  -
+    filename_prefix: account_budget.struct.unfiltered
+    query:
+      SELECT
+
+        customer.id,
+
+        account_budget.adjusted_spending_limit_micros,
+        account_budget.adjusted_spending_limit_type,
+        account_budget.amount_served_micros,
+        account_budget.approved_end_date_time,
+        account_budget.approved_end_time_type,
+        account_budget.approved_spending_limit_micros,
+        account_budget.approved_spending_limit_type,
+        account_budget.approved_start_date_time,
+        account_budget.billing_setup,
+        account_budget.id,
+        account_budget.name,
+        account_budget.notes,
+        account_budget.pending_proposal.account_budget_proposal,
+        account_budget.pending_proposal.creation_date_time,
+        account_budget.pending_proposal.end_date_time,
+        account_budget.pending_proposal.end_time_type,
+        account_budget.pending_proposal.name,
+        account_budget.pending_proposal.notes,
+        account_budget.pending_proposal.proposal_type,
+        account_budget.pending_proposal.purchase_order_number,
+        account_budget.pending_proposal.spending_limit_micros,
+        account_budget.pending_proposal.spending_limit_type,
+        account_budget.pending_proposal.start_date_time,
+        account_budget.proposed_end_date_time,
+        account_budget.proposed_end_time_type,
+        account_budget.proposed_spending_limit_micros,
+        account_budget.proposed_spending_limit_type,
+        account_budget.proposed_start_date_time,
+        account_budget.purchase_order_number,
+        account_budget.resource_name,
+        account_budget.status,
+        account_budget.total_adjustments_micros
+
+      FROM
+        account_budget
+
+  #
+  # Billing Setup
+  #
+  -
+    filename_prefix: billing_setup.struct.unfiltered
+    query:
+      SELECT
+
+        customer.id,
+
+        billing_setup.end_date_time,
+        billing_setup.end_time_type,
+        billing_setup.id,
+        billing_setup.payments_account,
+        billing_setup.payments_account_info.payments_account_id,
+        billing_setup.payments_account_info.payments_account_name,
+        billing_setup.payments_account_info.payments_profile_id,
+        billing_setup.payments_account_info.payments_profile_name,
+        billing_setup.payments_account_info.secondary_payments_profile_id,
+        billing_setup.resource_name,
+        billing_setup.start_date_time,
+        billing_setup.status
+
+        billing_setup.end_date_time,
+        billing_setup.end_time_type,
+        billing_setup.id,
+        billing_setup.payments_account,
+        billing_setup.payments_account_info.payments_account_id,
+        billing_setup.payments_account_info.payments_account_name,
+        billing_setup.payments_account_info.payments_profile_id,
+        billing_setup.payments_account_info.payments_profile_name,
+        billing_setup.payments_account_info.secondary_payments_profile_id,
+        billing_setup.resource_name,
+        billing_setup.start_date_time,
+        billing_setup.status
+
+      FROM
+        billing_setup
+
+  #
+  # Account Link
+  #
+  -
+    filename_prefix: account_link.struct.unfiltered
+    query:
+      SELECT
+
+        customer.id,
+
+        account_link.account_link_id,
+        account_link.data_partner.data_partner_id,
+        account_link.google_ads.customer,
+        account_link.resource_name,
+        account_link.status,
+        account_link.third_party_app_analytics.app_analytics_provider_id,
+        account_link.third_party_app_analytics.app_id,
+        account_link.third_party_app_analytics.app_vendor,
+        account_link.type
+
+      FROM
+        account_link
+
+  #
+  # Third Party App Analytics Link
+  #
+  -
+    filename_prefix: third_party_app_analytics_link.struct.unfiltered
+    query:
+      SELECT
+
+        customer.id,
+        account_link.account_link_id,
+
+        third_party_app_analytics_link.resource_name,
+        third_party_app_analytics_link.shareable_link_id
+
+      FROM
+        third_party_app_analytics_link
+
+  #
+  # Customer Extension Settings
+  #
+  -
+    filename_prefix: customer_extension_setting.struct.unfiltered
+    query: 
+      SELECT
+
+        customer.id,
+        customer_extension_setting.device,
+        customer_extension_setting.extension_feed_items,
+        customer_extension_setting.extension_type,
+        customer_extension_setting.resource_name
+
+      FROM
+        customer_extension_setting
+
+  #
+  # Campaigns
+  #
+  # NOTE: We don't include the `campaign.labels` resource here currently as
+  # that causes the API to return a 500
+  #
+  # NOTE: We currently exclude the following fields from the attributed
+  # bid strategy resource, as they seem to make the response time for this
+  # resource jump from milleseconds to minutes:
+  #   - bidding_strategy.campaign_count,
+  #   - bidding_strategy.non_removed_campaign_count,
+  #
+  -
+    filename_prefix: campaign.struct.search,effectively_enabled
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+
+        campaign.ad_serving_optimization_status,
+        campaign.advertising_channel_sub_type,
+        campaign.advertising_channel_type,
+        campaign.app_campaign_setting.app_id,
+        campaign.app_campaign_setting.app_store,
+        campaign.app_campaign_setting.bidding_strategy_goal_type,
+        campaign.base_campaign,
+        campaign.bidding_strategy,
+        campaign.bidding_strategy_type,
+        campaign.commission.commission_rate_micros,
+        campaign.dynamic_search_ads_setting.domain_name,
+        campaign.dynamic_search_ads_setting.feeds,
+        campaign.dynamic_search_ads_setting.language_code,
+        campaign.dynamic_search_ads_setting.use_supplied_urls_only,
+        campaign.end_date,
+        campaign.experiment_type,
+        campaign.final_url_suffix,
+        campaign.frequency_caps,
+        campaign.geo_target_type_setting.negative_geo_target_type,
+        campaign.geo_target_type_setting.positive_geo_target_type,
+        campaign.hotel_setting.hotel_center_id,
+        campaign.local_campaign_setting.location_source_type,
+        campaign.manual_cpc.enhanced_cpc_enabled,
+        campaign.manual_cpm,
+        campaign.manual_cpv,
+        campaign.maximize_conversion_value.target_roas,
+        campaign.maximize_conversions,
+        campaign.name,
+        campaign.network_settings.target_content_network,
+        campaign.network_settings.target_google_search,
+        campaign.network_settings.target_partner_search_network,
+        campaign.network_settings.target_search_network,
+        campaign.optimization_goal_setting.optimization_goal_types,
+        campaign.optimization_score,
+        campaign.payment_mode,
+        campaign.percent_cpc.cpc_bid_ceiling_micros,
+        campaign.percent_cpc.enhanced_cpc_enabled,
+        campaign.real_time_bidding_setting.opt_in,
+        campaign.resource_name,
+        campaign.selective_optimization.conversion_actions,
+        campaign.serving_status,
+        campaign.shopping_setting.campaign_priority,
+        campaign.shopping_setting.enable_local,
+        campaign.shopping_setting.merchant_id,
+        campaign.shopping_setting.sales_country,
+        campaign.start_date,
+        campaign.status,
+        campaign.target_cpa.cpc_bid_ceiling_micros,
+        campaign.target_cpa.cpc_bid_floor_micros,
+        campaign.target_cpa.target_cpa_micros,
+        campaign.target_cpm,
+        campaign.target_impression_share.cpc_bid_ceiling_micros,
+        campaign.target_impression_share.location,
+        campaign.target_impression_share.location_fraction_micros,
+        campaign.target_roas.cpc_bid_ceiling_micros,
+        campaign.target_roas.cpc_bid_floor_micros,
+        campaign.target_roas.target_roas,
+        campaign.target_spend.cpc_bid_ceiling_micros,
+        campaign.target_spend.target_spend_micros,
+        campaign.targeting_setting.target_restrictions,
+        campaign.tracking_setting.tracking_url,
+        campaign.tracking_url_template,
+        campaign.url_custom_parameters,
+        campaign.vanity_pharma.vanity_pharma_display_url_mode,
+        campaign.vanity_pharma.vanity_pharma_text,
+        campaign.video_brand_safety_suitability,
+
+        campaign_budget.amount_micros,
+        campaign_budget.delivery_method,
+        campaign_budget.explicitly_shared,
+        campaign_budget.has_recommended_budget,
+        campaign_budget.id,
+        campaign_budget.name,
+        campaign_budget.period,
+        campaign_budget.recommended_budget_amount_micros,
+        campaign_budget.recommended_budget_estimated_change_weekly_clicks,
+        campaign_budget.recommended_budget_estimated_change_weekly_cost_micros,
+        campaign_budget.recommended_budget_estimated_change_weekly_interactions,
+        campaign_budget.recommended_budget_estimated_change_weekly_views,
+        campaign_budget.reference_count,
+        campaign_budget.resource_name,
+        campaign_budget.status,
+        campaign_budget.total_amount_micros,
+        campaign_budget.type,
+
+        bidding_strategy.effective_currency_code,
+        bidding_strategy.enhanced_cpc,
+        bidding_strategy.id,
+        bidding_strategy.name,
+        bidding_strategy.resource_name,
+        bidding_strategy.status,
+        bidding_strategy.target_cpa.cpc_bid_ceiling_micros,
+        bidding_strategy.target_cpa.cpc_bid_floor_micros,
+        bidding_strategy.target_cpa.target_cpa_micros,
+        bidding_strategy.target_impression_share.cpc_bid_ceiling_micros,
+        bidding_strategy.target_impression_share.location,
+        bidding_strategy.target_impression_share.location_fraction_micros,
+        bidding_strategy.target_roas.cpc_bid_ceiling_micros,
+        bidding_strategy.target_roas.cpc_bid_floor_micros,
+        bidding_strategy.target_roas.target_roas,
+        bidding_strategy.target_spend.cpc_bid_ceiling_micros,
+        bidding_strategy.target_spend.target_spend_micros,
+        bidding_strategy.type
+
+      FROM
+        campaign
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+
+  #
+  # Campaign Bid Modifiers (under enabled campaigns)
+  #
+  # NOTE: we filter out results with a null modifier. Otherwise we seem to
+  # get back entries where there isn't actually a modifier set. Unsure what
+  # exactly those entries mean - ie. do they tell us something unidentified
+  # about the presence of a modifier? Can remove that filter if so.
+  -
+    filename_prefix: campaign_bid_modifier.struct.search,not_null,ancestors_enabled
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+
+        campaign_bid_modifier.campaign,
+        campaign_bid_modifier.criterion_id,
+
+        campaign_bid_modifier.bid_modifier,
+        campaign_bid_modifier.interaction_type.type,
+        campaign_bid_modifier.resource_name
+
+      FROM
+        campaign_bid_modifier
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND campaign_bid_modifier.bid_modifier is NOT NULL
+
+  #
+  # Campaign Extension Setting (under enabled campaigns)
+  #
+  -
+    filename_prefix: campaign_extension_setting.struct.search,ancestors_enabled
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        campaign_extension_setting.campaign,
+
+        campaign_extension_setting.device,
+        campaign_extension_setting.extension_feed_items,
+        campaign_extension_setting.extension_type,
+        campaign_extension_setting.resource_name
+
+      FROM
+        campaign_extension_setting
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+
+  #
+  # Campaign Experiments
+  #
+  -
+    filename_prefix: campaign_experiment.struct.search,effectively_enabled
+    query:
+      SELECT
+
+        customer.id,
+        campaign.id,
+
+        campaign_experiment.campaign_draft,
+        campaign_experiment.description,
+        campaign_experiment.end_date,
+        campaign_experiment.experiment_campaign,
+        campaign_experiment.id,
+        campaign_experiment.long_running_operation,
+        campaign_experiment.name,
+        campaign_experiment.resource_name,
+        campaign_experiment.start_date,
+        campaign_experiment.status,
+        campaign_experiment.traffic_split_percent,
+        campaign_experiment.traffic_split_type
+
+      FROM
+        campaign_experiment
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND campaign_experiment.status = ENABLED
+
+  #
+  # Campaign Assets
+  #
+  -
+    filename_prefix: campaign_asset.struct.search,effectively_enabled
+    query:
+      SELECT
+
+        customer.id,
+        campaign.id,
+
+        campaign_asset.asset,
+        campaign_asset.campaign,
+        campaign_asset.field_type,
+        campaign_asset.resource_name,
+        campaign_asset.status
+
+      FROM
+        campaign_asset
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign_asset.status = ENABLED   
+
+  #
+  # Shared Sets (not scope filtered - these are account level)
+  #
+  # TODO: It seems that campaigns can be associated with shared sets from
+  # other accounts in an MCC. Therefore we can't get just the shared sets from
+  # within an account and expect to have all the data we need. We need
+  # to switch to using shared set data from attributed resources embedded on
+  # the campaign_shared_set relationship. This query left here for now as
+  # the current loader expects this data.
+  #
+  -
+    filename_prefix: shared_set.struct.unfiltered
+    query: 
+      SELECT
+  
+        customer.id,
+        shared_set.id,
+
+        shared_set.member_count,
+        shared_set.name,
+        shared_set.reference_count,
+        shared_set.resource_name,
+        shared_set.status,
+        shared_set.type
+
+      FROM
+        shared_set
+
+  #
+  # Campaign Shared Sets (under enabled campaigns)
+  #
+  # TODO: We need to replace this query with the one below, which includes
+  # denormalised attributed resource data for the shared set as shared sets
+  # can be attached across accounts in the MCC.
+  #
+  -
+    filename_prefix: campaign_shared_set.struct.search,ancestors_enabled
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        shared_set.id
+
+      FROM
+        campaign_shared_set
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+
+  #
+  # Campaign Shared Sets with attributed shared set (under enabled campaigns)
+  #
+  # NOTE: we need to get the shared set data attributed in this relationship
+  # as it's possible to assiciate a campaign with a shared set from another
+  # account in the same MCC.
+  #
+  -
+    filename_prefix: campaign_shared_set,attributed_shared_set.struct.search,ancestors_enabled
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        shared_set.id,
+        shared_set.member_count,
+        shared_set.name,
+        shared_set.reference_count,
+        shared_set.resource_name,
+        shared_set.status,
+        shared_set.type
+
+      FROM
+        campaign_shared_set
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+
+  #
+  # Shared Set Criteria (not scope filtered)
+  #
+  # Note: we don't grab the following attributes, as we only really need the id for each, which
+  # we do get
+  # - shared_criterion.resource_name
+  # - shared_criterion.shared_set
+
+  -
+    filename_prefix: shared_criterion.struct.unfiltered
+    query: 
+      SELECT
+
+        customer.id,
+        shared_set.id,
+        shared_criterion.criterion_id,
+
+        shared_criterion.keyword.match_type,
+        shared_criterion.keyword.text,
+        shared_criterion.mobile_app_category.mobile_app_category_constant,
+        shared_criterion.mobile_application.app_id,
+        shared_criterion.mobile_application.name,
+        shared_criterion.placement.url,
+        shared_criterion.type,
+        shared_criterion.youtube_channel.channel_id,
+        shared_criterion.youtube_video.video_id
+
+      FROM
+        shared_criterion
+
+  #
+  # Campaign Audience View
+  # https://developers.google.com/google-ads/api/fields/v5/campaign_audience_view
+  #
+  -
+    filename_prefix: campaign_audience_view.struct.effectively_enabled
+    query:
+      SELECT
+
+        customer.id,
+        campaign.id,
+
+        campaign_audience_view.resource_name,
+
+        user_list.access_reason,
+        user_list.account_user_list_status,
+        user_list.basic_user_list.actions,
+        user_list.closing_reason,
+        user_list.crm_based_user_list.app_id,
+        user_list.crm_based_user_list.data_source_type,
+        user_list.crm_based_user_list.upload_key_type,
+        user_list.description,
+        user_list.eligible_for_display,
+        user_list.eligible_for_search,
+        user_list.id,
+        user_list.integration_code,
+        user_list.logical_user_list.rules,
+        user_list.membership_life_span,
+        user_list.membership_status,
+        user_list.name,
+        user_list.read_only,
+        user_list.resource_name,
+        user_list.rule_based_user_list.combined_rule_user_list.left_operand.rule_item_groups,
+        user_list.rule_based_user_list.combined_rule_user_list.left_operand.rule_type,
+        user_list.rule_based_user_list.combined_rule_user_list.right_operand.rule_item_groups,
+        user_list.rule_based_user_list.combined_rule_user_list.right_operand.rule_type,
+        user_list.rule_based_user_list.combined_rule_user_list.rule_operator,
+        user_list.rule_based_user_list.date_specific_rule_user_list.end_date,
+        user_list.rule_based_user_list.date_specific_rule_user_list.rule.rule_item_groups,
+        user_list.rule_based_user_list.date_specific_rule_user_list.rule.rule_type,
+        user_list.rule_based_user_list.date_specific_rule_user_list.start_date,
+        user_list.rule_based_user_list.expression_rule_user_list.rule.rule_item_groups,
+        user_list.rule_based_user_list.expression_rule_user_list.rule.rule_type,
+        user_list.rule_based_user_list.prepopulation_status,
+        user_list.similar_user_list.seed_user_list,
+        user_list.size_for_display,
+        user_list.size_for_search,
+        user_list.size_range_for_display,
+        user_list.size_range_for_search,
+        user_list.type
+
+      FROM
+        campaign_audience_view
+      WHERE
+        campaign.status = ENABLED
+
+  #
+  # Campaign Criteria
+  #
+  # Note: we don't pull these arrtibutes as we only really need the id
+  #  - campaign_criterion.resource_name 
+  #
+  # Note: thse fields are not selctable
+  #  - campaign_criterion.listing_scope.dimensions.hotel_city.city_criterion
+  #  - campaign_criterion.listing_scope.dimensions.hotel_country_region.country_region_criterion
+  #  - campaign_criterion.listing_scope.dimensions.hotel_state.state_criterion
+  #  - campaign_criterion.location_group
+  #  - campaign_criterion.location_group.geo_target_constants  
+  #
+  -
+    filename_prefix: campaign_criterion.struct.search,effectively_enabled,negative
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        campaign_criterion.criterion_id,
+
+        campaign_criterion.ad_schedule.day_of_week,
+        campaign_criterion.ad_schedule.end_hour,
+        campaign_criterion.ad_schedule.end_minute,
+        campaign_criterion.ad_schedule.start_hour,
+        campaign_criterion.ad_schedule.start_minute,
+        campaign_criterion.age_range.type,
+        campaign_criterion.bid_modifier,
+        campaign_criterion.carrier.carrier_constant,
+        campaign_criterion.content_label.type,
+        campaign_criterion.custom_affinity.custom_affinity,
+        campaign_criterion.device.type,
+        campaign_criterion.gender.type,
+        campaign_criterion.income_range.type,
+        campaign_criterion.ip_block.ip_address,
+        campaign_criterion.keyword.match_type,
+        campaign_criterion.keyword.text,
+        campaign_criterion.language.language_constant,
+        campaign_criterion.listing_scope.dimensions,
+        campaign_criterion.location.geo_target_constant,
+        campaign_criterion.location_group,
+        campaign_criterion.location_group.feed,
+        campaign_criterion.mobile_app_category.mobile_app_category_constant,
+        campaign_criterion.mobile_application.app_id,
+        campaign_criterion.mobile_application.name,
+        campaign_criterion.mobile_device.mobile_device_constant,
+        campaign_criterion.negative,
+        campaign_criterion.operating_system_version.operating_system_version_constant,
+        campaign_criterion.parental_status.type,
+        campaign_criterion.placement.url,
+        campaign_criterion.proximity.address.city_name,
+        campaign_criterion.proximity.address.country_code,
+        campaign_criterion.proximity.address.postal_code,
+        campaign_criterion.proximity.address.province_code,
+        campaign_criterion.proximity.address.province_name,
+        campaign_criterion.proximity.address.street_address,
+        campaign_criterion.proximity.geo_point.latitude_in_micro_degrees,
+        campaign_criterion.proximity.geo_point.longitude_in_micro_degrees,
+        campaign_criterion.proximity.radius,
+        campaign_criterion.proximity.radius_units,
+        campaign_criterion.status,
+        campaign_criterion.topic.path,
+        campaign_criterion.topic.topic_constant,
+        campaign_criterion.type,
+        campaign_criterion.user_interest.user_interest_category,
+        campaign_criterion.user_list.user_list,
+        campaign_criterion.webpage.conditions,
+        campaign_criterion.webpage.criterion_name,
+        campaign_criterion.youtube_channel.channel_id,
+        campaign_criterion.youtube_video.video_id,
+
+        carrier_constant.country_code,
+        carrier_constant.id,
+        carrier_constant.name,
+        carrier_constant.resource_name,
+
+        feed.affiliate_location_feed_data.chain_ids,
+        feed.affiliate_location_feed_data.relationship_type,
+        feed.attributes,
+        feed.id,
+        feed.name,
+        feed.origin,
+        feed.places_location_feed_data.business_name_filter,
+        feed.places_location_feed_data.category_filters,
+        feed.places_location_feed_data.email_address,
+        feed.places_location_feed_data.label_filters,
+        feed.resource_name,
+        feed.status,
+
+        language_constant.code,
+        language_constant.id,
+        language_constant.name,
+        language_constant.resource_name,
+        language_constant.targetable,
+
+        mobile_app_category_constant.id,
+        mobile_app_category_constant.name,
+        mobile_app_category_constant.resource_name,
+
+        mobile_device_constant.id,
+        mobile_device_constant.manufacturer_name,
+        mobile_device_constant.name,
+        mobile_device_constant.operating_system_name,
+        mobile_device_constant.resource_name,
+        mobile_device_constant.type,
+
+        operating_system_version_constant.id,
+        operating_system_version_constant.name,
+        operating_system_version_constant.operator_type,
+        operating_system_version_constant.os_major_version,
+        operating_system_version_constant.os_minor_version,
+        operating_system_version_constant.resource_name,
+
+        topic_constant.id,
+        topic_constant.path,
+        topic_constant.resource_name,
+        topic_constant.topic_constant_parent,
+
+        user_interest.availabilities,
+        user_interest.launched_to_all,
+        user_interest.name,
+        user_interest.resource_name,
+        user_interest.taxonomy_type,
+        user_interest.user_interest_id,
+        user_interest.user_interest_parent,
+
+        user_list.access_reason,
+        user_list.account_user_list_status,
+        user_list.basic_user_list.actions,
+        user_list.closing_reason,
+        user_list.crm_based_user_list.app_id,
+        user_list.crm_based_user_list.data_source_type,
+        user_list.crm_based_user_list.upload_key_type,
+        user_list.description,
+        user_list.eligible_for_display,
+        user_list.eligible_for_search,
+        user_list.id,
+        user_list.integration_code,
+        user_list.logical_user_list.rules,
+        user_list.membership_life_span,
+        user_list.membership_status,
+        user_list.name,
+        user_list.read_only,
+        user_list.resource_name,
+        user_list.rule_based_user_list.combined_rule_user_list.left_operand.rule_item_groups,
+        user_list.rule_based_user_list.combined_rule_user_list.left_operand.rule_type,
+        user_list.rule_based_user_list.combined_rule_user_list.right_operand.rule_item_groups,
+        user_list.rule_based_user_list.combined_rule_user_list.right_operand.rule_type,
+        user_list.rule_based_user_list.combined_rule_user_list.rule_operator,
+        user_list.rule_based_user_list.date_specific_rule_user_list.end_date,
+        user_list.rule_based_user_list.date_specific_rule_user_list.rule.rule_item_groups,
+        user_list.rule_based_user_list.date_specific_rule_user_list.rule.rule_type,
+        user_list.rule_based_user_list.date_specific_rule_user_list.start_date,
+        user_list.rule_based_user_list.expression_rule_user_list.rule.rule_item_groups,
+        user_list.rule_based_user_list.expression_rule_user_list.rule.rule_type,
+        user_list.rule_based_user_list.prepopulation_status,
+        user_list.similar_user_list.seed_user_list,
+        user_list.size_for_display,
+        user_list.size_for_search,
+        user_list.size_range_for_display,
+        user_list.size_range_for_search,
+        user_list.type
+
+      FROM
+        campaign_criterion
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND campaign_criterion.status = ENABLED
+        AND campaign_criterion.negative = true
+
+  -
+    filename_prefix: campaign_criterion.struct.search,effectively_enabled,positive
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        campaign_criterion.criterion_id,
+
+        campaign_criterion.ad_schedule.day_of_week,
+        campaign_criterion.ad_schedule.end_hour,
+        campaign_criterion.ad_schedule.end_minute,
+        campaign_criterion.ad_schedule.start_hour,
+        campaign_criterion.ad_schedule.start_minute,
+        campaign_criterion.age_range.type,
+        campaign_criterion.bid_modifier,
+        campaign_criterion.carrier.carrier_constant,
+        campaign_criterion.content_label.type,
+        campaign_criterion.custom_affinity.custom_affinity,
+        campaign_criterion.device.type,
+        campaign_criterion.gender.type,
+        campaign_criterion.income_range.type,
+        campaign_criterion.ip_block.ip_address,
+        campaign_criterion.keyword.match_type,
+        campaign_criterion.keyword.text,
+        campaign_criterion.language.language_constant,
+        campaign_criterion.listing_scope.dimensions,
+        campaign_criterion.location.geo_target_constant,
+        campaign_criterion.location_group,
+        campaign_criterion.location_group.feed,
+        campaign_criterion.mobile_app_category.mobile_app_category_constant,
+        campaign_criterion.mobile_application.app_id,
+        campaign_criterion.mobile_application.name,
+        campaign_criterion.mobile_device.mobile_device_constant,
+        campaign_criterion.negative,
+        campaign_criterion.operating_system_version.operating_system_version_constant,
+        campaign_criterion.parental_status.type,
+        campaign_criterion.placement.url,
+        campaign_criterion.proximity.address.city_name,
+        campaign_criterion.proximity.address.country_code,
+        campaign_criterion.proximity.address.postal_code,
+        campaign_criterion.proximity.address.province_code,
+        campaign_criterion.proximity.address.province_name,
+        campaign_criterion.proximity.address.street_address,
+        campaign_criterion.proximity.geo_point.latitude_in_micro_degrees,
+        campaign_criterion.proximity.geo_point.longitude_in_micro_degrees,
+        campaign_criterion.proximity.radius,
+        campaign_criterion.proximity.radius_units,
+        campaign_criterion.status,
+        campaign_criterion.topic.path,
+        campaign_criterion.topic.topic_constant,
+        campaign_criterion.type,
+        campaign_criterion.user_interest.user_interest_category,
+        campaign_criterion.user_list.user_list,
+        campaign_criterion.webpage.conditions,
+        campaign_criterion.webpage.criterion_name,
+        campaign_criterion.youtube_channel.channel_id,
+        campaign_criterion.youtube_video.video_id,
+
+        carrier_constant.country_code,
+        carrier_constant.id,
+        carrier_constant.name,
+        carrier_constant.resource_name,
+
+        feed.affiliate_location_feed_data.chain_ids,
+        feed.affiliate_location_feed_data.relationship_type,
+        feed.attributes,
+        feed.id,
+        feed.name,
+        feed.origin,
+        feed.places_location_feed_data.business_name_filter,
+        feed.places_location_feed_data.category_filters,
+        feed.places_location_feed_data.email_address,
+        feed.places_location_feed_data.label_filters,
+        feed.resource_name,
+        feed.status,
+
+        language_constant.code,
+        language_constant.id,
+        language_constant.name,
+        language_constant.resource_name,
+        language_constant.targetable,
+
+        mobile_app_category_constant.id,
+        mobile_app_category_constant.name,
+        mobile_app_category_constant.resource_name,
+
+        mobile_device_constant.id,
+        mobile_device_constant.manufacturer_name,
+        mobile_device_constant.name,
+        mobile_device_constant.operating_system_name,
+        mobile_device_constant.resource_name,
+        mobile_device_constant.type,
+
+        operating_system_version_constant.id,
+        operating_system_version_constant.name,
+        operating_system_version_constant.operator_type,
+        operating_system_version_constant.os_major_version,
+        operating_system_version_constant.os_minor_version,
+        operating_system_version_constant.resource_name,
+
+        topic_constant.id,
+        topic_constant.path,
+        topic_constant.resource_name,
+        topic_constant.topic_constant_parent,
+
+        user_interest.availabilities,
+        user_interest.launched_to_all,
+        user_interest.name,
+        user_interest.resource_name,
+        user_interest.taxonomy_type,
+        user_interest.user_interest_id,
+        user_interest.user_interest_parent,
+
+        user_list.access_reason,
+        user_list.account_user_list_status,
+        user_list.basic_user_list.actions,
+        user_list.closing_reason,
+        user_list.crm_based_user_list.app_id,
+        user_list.crm_based_user_list.data_source_type,
+        user_list.crm_based_user_list.upload_key_type,
+        user_list.description,
+        user_list.eligible_for_display,
+        user_list.eligible_for_search,
+        user_list.id,
+        user_list.integration_code,
+        user_list.logical_user_list.rules,
+        user_list.membership_life_span,
+        user_list.membership_status,
+        user_list.name,
+        user_list.read_only,
+        user_list.resource_name,
+        user_list.rule_based_user_list.combined_rule_user_list.left_operand.rule_item_groups,
+        user_list.rule_based_user_list.combined_rule_user_list.left_operand.rule_type,
+        user_list.rule_based_user_list.combined_rule_user_list.right_operand.rule_item_groups,
+        user_list.rule_based_user_list.combined_rule_user_list.right_operand.rule_type,
+        user_list.rule_based_user_list.combined_rule_user_list.rule_operator,
+        user_list.rule_based_user_list.date_specific_rule_user_list.end_date,
+        user_list.rule_based_user_list.date_specific_rule_user_list.rule.rule_item_groups,
+        user_list.rule_based_user_list.date_specific_rule_user_list.rule.rule_type,
+        user_list.rule_based_user_list.date_specific_rule_user_list.start_date,
+        user_list.rule_based_user_list.expression_rule_user_list.rule.rule_item_groups,
+        user_list.rule_based_user_list.expression_rule_user_list.rule.rule_type,
+        user_list.rule_based_user_list.prepopulation_status,
+        user_list.similar_user_list.seed_user_list,
+        user_list.size_for_display,
+        user_list.size_for_search,
+        user_list.size_range_for_display,
+        user_list.size_range_for_search,
+        user_list.type
+
+      FROM
+        campaign_criterion
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND campaign_criterion.status = ENABLED
+        AND campaign_criterion.negative = false
+
+  #
+  # Feed Item
+  #
+  -
+    filename_prefix: feed_item.struct.search,enabled
+    query:
+      SELECT
+
+        customer.id,
+
+        feed.affiliate_location_feed_data.chain_ids,
+        feed.affiliate_location_feed_data.relationship_type,
+        feed.attributes,
+        feed.id,
+        feed.name,
+        feed.origin,
+        feed.places_location_feed_data.business_name_filter,
+        feed.places_location_feed_data.category_filters,
+        feed.places_location_feed_data.email_address,
+        feed.places_location_feed_data.label_filters,
+        feed.resource_name,
+        feed.status,
+
+        feed_item.attribute_values,
+        feed_item.end_date_time,
+        feed_item.feed,
+        feed_item.geo_targeting_restriction,
+        feed_item.id,
+        feed_item.policy_infos,
+        feed_item.resource_name,
+        feed_item.start_date_time,
+        feed_item.status,
+        feed_item.url_custom_parameters
+
+      FROM
+        feed_item
+      WHERE
+        feed_item.status = ENABLED
+
+  #
+  # AdGroup
+  # https://developers.google.com/google-ads/api/fields/v5/ad_group
+  #
+  # NOTE: We don't include the `ad_group.labels` resource here currently as
+  # that causes the API to return a 500
+  -
+    filename_prefix: ad_group.struct.search,effectively_enabled
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        ad_group.ad_rotation_mode,
+        ad_group.base_ad_group,
+        ad_group.cpc_bid_micros,
+        ad_group.cpm_bid_micros,
+        ad_group.cpv_bid_micros,
+        ad_group.display_custom_bid_dimension,
+        ad_group.effective_target_cpa_micros,
+        ad_group.effective_target_cpa_source,
+        ad_group.effective_target_roas,
+        ad_group.effective_target_roas_source,
+        ad_group.explorer_auto_optimizer_setting.opt_in,
+        ad_group.final_url_suffix,
+        ad_group.id,
+        ad_group.name,
+        ad_group.percent_cpc_bid_micros,
+        ad_group.resource_name,
+        ad_group.status,
+        ad_group.target_cpa_micros,
+        ad_group.target_cpm_micros,
+        ad_group.target_roas,
+        ad_group.targeting_setting.target_restrictions,
+        ad_group.tracking_url_template,
+        ad_group.type,
+        ad_group.url_custom_parameters
+
+      FROM
+        ad_group
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND ad_group.status = ENABLED
+
+  #
+  # AdGroup Bid Modifier (ancestors enabled)
+  #
+  # NOTE: we filter out results with a null modifier. Otherwise we seem to
+  # get back entries where there isn't actually a modifier set. Unsure what
+  # exactly those entries mean - ie. do they tell us something unidentified
+  # about the presence of a modifier? Can remove that filter if so.
+  -
+    filename_prefix: ad_group_bid_modifier.struct.search,not_null,ancestors_enabled
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        ad_group_bid_modifier.ad_group,
+        ad_group_bid_modifier.criterion_id,
+
+        ad_group_bid_modifier.base_ad_group,
+        ad_group_bid_modifier.bid_modifier,
+        ad_group_bid_modifier.bid_modifier_source,
+        ad_group_bid_modifier.device.type,
+        ad_group_bid_modifier.hotel_advance_booking_window.max_days,
+        ad_group_bid_modifier.hotel_advance_booking_window.min_days,
+        ad_group_bid_modifier.hotel_check_in_day.day_of_week,
+        ad_group_bid_modifier.hotel_date_selection_type.type,
+        ad_group_bid_modifier.hotel_length_of_stay.max_nights,
+        ad_group_bid_modifier.hotel_length_of_stay.min_nights,
+        ad_group_bid_modifier.preferred_content.type,
+        ad_group_bid_modifier.resource_name
+
+      FROM
+        ad_group_bid_modifier
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND ad_group.status = ENABLED
+        AND ad_group_bid_modifier.bid_modifier is NOT NULL
+
+  #
+  # Ad Group Feed
+  # https://developers.google.com/google-ads/api/fields/v5/ad_group_feed
+  #
+  -
+    filename_prefix: ad_group_feed.struct.search,effectively_enabled
+    query:
+      SELECT
+
+        customer.id,
+        ad_group.id,
+
+        ad_group_feed.feed,
+        ad_group_feed.matching_function.function_string,
+        ad_group_feed.matching_function.left_operands,
+        ad_group_feed.matching_function.operator,
+        ad_group_feed.matching_function.right_operands,
+        ad_group_feed.placeholder_types,
+        ad_group_feed.resource_name,
+        ad_group_feed.status
+
+      FROM
+        ad_group_feed
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND ad_group.status = ENABLED
+        AND ad_group_feed.status = ENABLED
+
+  #
+  # AdGroup Audience View
+  # https://developers.google.com/google-ads/api/fields/v5/ad_group_audience_view
+  #
+  -
+    filename_prefix: ad_group_audience_view.struct.effectively_enabled
+    query:
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        ad_group_audience_view.resource_name,
+
+        user_list.access_reason,
+        user_list.account_user_list_status,
+        user_list.basic_user_list.actions,
+        user_list.closing_reason,
+        user_list.crm_based_user_list.app_id,
+        user_list.crm_based_user_list.data_source_type,
+        user_list.crm_based_user_list.upload_key_type,
+        user_list.description,
+        user_list.eligible_for_display,
+        user_list.eligible_for_search,
+        user_list.id,
+        user_list.integration_code,
+        user_list.logical_user_list.rules,
+        user_list.membership_life_span,
+        user_list.membership_status,
+        user_list.name,
+        user_list.read_only,
+        user_list.resource_name,
+        user_list.rule_based_user_list.combined_rule_user_list.left_operand.rule_item_groups,
+        user_list.rule_based_user_list.combined_rule_user_list.left_operand.rule_type,
+        user_list.rule_based_user_list.combined_rule_user_list.right_operand.rule_item_groups,
+        user_list.rule_based_user_list.combined_rule_user_list.right_operand.rule_type,
+        user_list.rule_based_user_list.combined_rule_user_list.rule_operator,
+        user_list.rule_based_user_list.date_specific_rule_user_list.end_date,
+        user_list.rule_based_user_list.date_specific_rule_user_list.rule.rule_item_groups,
+        user_list.rule_based_user_list.date_specific_rule_user_list.rule.rule_type,
+        user_list.rule_based_user_list.date_specific_rule_user_list.start_date,
+        user_list.rule_based_user_list.expression_rule_user_list.rule.rule_item_groups,
+        user_list.rule_based_user_list.expression_rule_user_list.rule.rule_type,
+        user_list.rule_based_user_list.prepopulation_status,
+        user_list.similar_user_list.seed_user_list,
+        user_list.size_for_display,
+        user_list.size_for_search,
+        user_list.size_range_for_display,
+        user_list.size_range_for_search,
+        user_list.type
+
+      FROM
+        ad_group_audience_view
+      WHERE
+        campaign.status = ENABLED
+        AND ad_group.status = ENABLED
+
+  #
+  # AdGroup biddable criteria
+  # https://developers.google.com/google-ads/api/fields/v5/ad_group_criterion
+  # 
+  # TODO: add additional filtering to get only criteria under ad groups of
+  # interest
+  #
+
+  # AdSchedule - not applicable as an ad group criterion
+  # Keyword - pulled separately from the keyword_view
+  # Language - not applicable at ad group level
+  # Location - not applicable at ad group level
+
+  # AgeRange
+  -
+    filename_prefix: ad_group_criterion.struct.search,effectively_enabled,positive,age_range
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id, 
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+
+        ad_group_criterion.age_range.type,
+        ad_group_criterion.approval_status,
+        ad_group_criterion.bid_modifier,
+        ad_group_criterion.cpc_bid_micros,
+        ad_group_criterion.cpm_bid_micros,
+        ad_group_criterion.cpv_bid_micros,
+        ad_group_criterion.disapproval_reasons,        
+        ad_group_criterion.effective_cpc_bid_micros,
+        ad_group_criterion.effective_cpc_bid_source,
+        ad_group_criterion.effective_cpm_bid_micros,
+        ad_group_criterion.effective_cpm_bid_source,
+        ad_group_criterion.effective_cpv_bid_micros,
+        ad_group_criterion.effective_cpv_bid_source,
+        ad_group_criterion.effective_percent_cpc_bid_micros,
+        ad_group_criterion.effective_percent_cpc_bid_source,
+        ad_group_criterion.negative,
+        ad_group_criterion.percent_cpc_bid_micros,
+        ad_group_criterion.resource_name,
+        ad_group_criterion.status,
+        ad_group_criterion.system_serving_status,
+        ad_group_criterion.type
+
+      FROM
+        ad_group_criterion
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND ad_group_criterion.type = AGE_RANGE
+        AND ad_group.status = ENABLED
+        AND ad_group_criterion.status = ENABLED
+        AND ad_group_criterion.negative = false
+
+  # Device
+  -
+    filename_prefix: ad_group_criterion.struct.search,effectively_enabled,positive,device
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id, 
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+
+        ad_group_criterion.approval_status,
+        ad_group_criterion.bid_modifier,
+        ad_group_criterion.cpc_bid_micros,
+        ad_group_criterion.cpm_bid_micros,
+        ad_group_criterion.cpv_bid_micros,
+        ad_group_criterion.disapproval_reasons,
+        ad_group_criterion.effective_cpc_bid_micros,
+        ad_group_criterion.effective_cpc_bid_source,
+        ad_group_criterion.effective_cpm_bid_micros,
+        ad_group_criterion.effective_cpm_bid_source,
+        ad_group_criterion.effective_cpv_bid_micros,
+        ad_group_criterion.effective_cpv_bid_source,
+        ad_group_criterion.effective_percent_cpc_bid_micros,
+        ad_group_criterion.effective_percent_cpc_bid_source,
+        ad_group_criterion.negative,
+        ad_group_criterion.percent_cpc_bid_micros,
+        ad_group_criterion.resource_name,
+        ad_group_criterion.status,
+        ad_group_criterion.system_serving_status,
+        ad_group_criterion.tracking_url_template,
+        ad_group_criterion.type,
+        ad_group_criterion.url_custom_parameters
+
+      FROM
+        ad_group_criterion
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND ad_group_criterion.type = DEVICE
+        AND ad_group.status = ENABLED
+        AND ad_group_criterion.status = ENABLED
+        AND ad_group_criterion.negative = false  
+  
+  # Gender
+  -
+    filename_prefix: ad_group_criterion.struct.search,effectively_enabled,positive,gender
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id, 
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+
+        ad_group_criterion.approval_status,
+        ad_group_criterion.bid_modifier,
+        ad_group_criterion.cpc_bid_micros,
+        ad_group_criterion.cpm_bid_micros,
+        ad_group_criterion.cpv_bid_micros,
+        ad_group_criterion.disapproval_reasons
+        ad_group_criterion.effective_cpc_bid_micros,
+        ad_group_criterion.effective_cpc_bid_source,
+        ad_group_criterion.effective_cpm_bid_micros,
+        ad_group_criterion.effective_cpm_bid_source,
+        ad_group_criterion.effective_cpv_bid_micros,
+        ad_group_criterion.effective_cpv_bid_source,
+        ad_group_criterion.effective_percent_cpc_bid_micros,
+        ad_group_criterion.effective_percent_cpc_bid_source,
+        ad_group_criterion.gender.type,
+        ad_group_criterion.negative,
+        ad_group_criterion.percent_cpc_bid_micros,
+        ad_group_criterion.resource_name,
+        ad_group_criterion.status,
+        ad_group_criterion.system_serving_status,
+        ad_group_criterion.type
+
+      FROM
+        ad_group_criterion
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND ad_group_criterion.type = GENDER
+        AND ad_group.status = ENABLED
+        AND ad_group_criterion.status = ENABLED
+        AND ad_group_criterion.negative = false
+
+  # UserInterest
+  -
+    filename_prefix: ad_group_criterion.struct.search,effectively_enabled,positive,user_interest
+    query:
+      SELECT
+
+        customer.id,
+        campaign.id, 
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+
+        ad_group_criterion.approval_status,
+        ad_group_criterion.bid_modifier,
+        ad_group_criterion.cpc_bid_micros,
+        ad_group_criterion.cpm_bid_micros,
+        ad_group_criterion.cpv_bid_micros,
+        ad_group_criterion.disapproval_reasons
+        ad_group_criterion.effective_cpc_bid_micros,
+        ad_group_criterion.effective_cpc_bid_source,
+        ad_group_criterion.effective_cpm_bid_micros,
+        ad_group_criterion.effective_cpm_bid_source,
+        ad_group_criterion.effective_cpv_bid_micros,
+        ad_group_criterion.effective_cpv_bid_source,
+        ad_group_criterion.effective_percent_cpc_bid_micros,
+        ad_group_criterion.effective_percent_cpc_bid_source,
+        ad_group_criterion.negative,
+        ad_group_criterion.percent_cpc_bid_micros,
+        ad_group_criterion.resource_name,
+        ad_group_criterion.status,
+        ad_group_criterion.system_serving_status,
+        ad_group_criterion.type,
+        ad_group_criterion.user_interest.user_interest_category,
+
+        user_interest.availabilities,
+        user_interest.launched_to_all,
+        user_interest.name,
+        user_interest.resource_name,
+        user_interest.taxonomy_type,
+        user_interest.user_interest_id,
+        user_interest.user_interest_parent
+
+      FROM
+        ad_group_criterion
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND ad_group_criterion.type = USER_INTEREST
+        AND ad_group.status = ENABLED
+        AND ad_group_criterion.status = ENABLED
+        AND ad_group_criterion.negative = false
+
+  # UserList
+  -
+    filename_prefix: ad_group_criterion.struct.search,effectively_enabled,positive,user_list
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id, 
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+
+        ad_group_criterion.approval_status,
+        ad_group_criterion.bid_modifier,
+        ad_group_criterion.cpc_bid_micros,
+        ad_group_criterion.cpm_bid_micros,
+        ad_group_criterion.cpv_bid_micros,
+        ad_group_criterion.disapproval_reasons
+        ad_group_criterion.effective_cpc_bid_micros,
+        ad_group_criterion.effective_cpc_bid_source,
+        ad_group_criterion.effective_cpm_bid_micros,
+        ad_group_criterion.effective_cpm_bid_source,
+        ad_group_criterion.effective_cpv_bid_micros,
+        ad_group_criterion.effective_cpv_bid_source,
+        ad_group_criterion.effective_percent_cpc_bid_micros,
+        ad_group_criterion.effective_percent_cpc_bid_source,
+        ad_group_criterion.negative,
+        ad_group_criterion.percent_cpc_bid_micros,
+        ad_group_criterion.resource_name,
+        ad_group_criterion.status,
+        ad_group_criterion.system_serving_status,
+        ad_group_criterion.type,
+        ad_group_criterion.user_list.user_list,
+
+        user_list.access_reason,
+        user_list.account_user_list_status,
+        user_list.basic_user_list.actions,
+        user_list.closing_reason,
+        user_list.crm_based_user_list.app_id,
+        user_list.crm_based_user_list.data_source_type,
+        user_list.crm_based_user_list.upload_key_type,
+        user_list.description,
+        user_list.eligible_for_display,
+        user_list.eligible_for_search,
+        user_list.id,
+        user_list.integration_code,
+        user_list.logical_user_list.rules,
+        user_list.membership_life_span,
+        user_list.membership_status,
+        user_list.name,
+        user_list.read_only,
+        user_list.resource_name,
+        user_list.rule_based_user_list.combined_rule_user_list.left_operand.rule_item_groups,
+        user_list.rule_based_user_list.combined_rule_user_list.left_operand.rule_type,
+        user_list.rule_based_user_list.combined_rule_user_list.right_operand.rule_item_groups,
+        user_list.rule_based_user_list.combined_rule_user_list.right_operand.rule_type,
+        user_list.rule_based_user_list.combined_rule_user_list.rule_operator,
+        user_list.rule_based_user_list.date_specific_rule_user_list.end_date,
+        user_list.rule_based_user_list.date_specific_rule_user_list.rule.rule_item_groups,
+        user_list.rule_based_user_list.date_specific_rule_user_list.rule.rule_type,
+        user_list.rule_based_user_list.date_specific_rule_user_list.start_date,
+        user_list.rule_based_user_list.expression_rule_user_list.rule.rule_item_groups,
+        user_list.rule_based_user_list.expression_rule_user_list.rule.rule_type,
+        user_list.rule_based_user_list.prepopulation_status,
+        user_list.similar_user_list.seed_user_list,
+        user_list.size_for_display,
+        user_list.size_for_search,
+        user_list.size_range_for_display,
+        user_list.size_range_for_search,
+        user_list.type
+
+      FROM
+        ad_group_criterion
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND ad_group_criterion.type = USER_LIST
+        AND ad_group.status = ENABLED
+        AND ad_group_criterion.status = ENABLED
+        AND ad_group_criterion.negative = false
+
+  # All other types not retrieved in individual queries
+  -
+    filename_prefix: ad_group_criterion.struct.search,effectively_enabled,positive,other
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id, 
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+
+        ad_group_criterion.age_range.type,
+        ad_group_criterion.app_payment_model.type,
+        ad_group_criterion.approval_status,
+        ad_group_criterion.bid_modifier,
+        ad_group_criterion.cpc_bid_micros,
+        ad_group_criterion.cpm_bid_micros,
+        ad_group_criterion.cpv_bid_micros,
+        ad_group_criterion.custom_affinity.custom_affinity,
+        ad_group_criterion.custom_intent.custom_intent,
+        ad_group_criterion.disapproval_reasons,
+        ad_group_criterion.effective_cpc_bid_micros,
+        ad_group_criterion.effective_cpc_bid_source,
+        ad_group_criterion.effective_cpm_bid_micros,
+        ad_group_criterion.effective_cpm_bid_source,
+        ad_group_criterion.effective_cpv_bid_micros,
+        ad_group_criterion.effective_cpv_bid_source,
+        ad_group_criterion.effective_percent_cpc_bid_micros,
+        ad_group_criterion.effective_percent_cpc_bid_source,
+        ad_group_criterion.final_mobile_urls,
+        ad_group_criterion.final_url_suffix,
+        ad_group_criterion.final_urls,
+        ad_group_criterion.gender.type,
+        ad_group_criterion.income_range.type,
+        ad_group_criterion.keyword.match_type,
+        ad_group_criterion.keyword.text,
+        ad_group_criterion.listing_group.case_value.hotel_city.city_criterion,
+        ad_group_criterion.listing_group.case_value.hotel_class.value,
+        ad_group_criterion.listing_group.case_value.hotel_country_region.country_region_criterion,
+        ad_group_criterion.listing_group.case_value.hotel_id.value,
+        ad_group_criterion.listing_group.case_value.hotel_state.state_criterion,
+        ad_group_criterion.listing_group.case_value.product_brand.value,
+        ad_group_criterion.listing_group.case_value.product_custom_attribute.index,
+        ad_group_criterion.listing_group.case_value.product_custom_attribute.value,
+        ad_group_criterion.listing_group.case_value.product_bidding_category.country_code,
+        ad_group_criterion.listing_group.case_value.product_bidding_category.id,
+        ad_group_criterion.listing_group.case_value.product_bidding_category.level,
+        ad_group_criterion.listing_group.case_value.product_channel.channel,
+        ad_group_criterion.listing_group.case_value.product_channel_exclusivity.channel_exclusivity,
+        ad_group_criterion.listing_group.case_value.product_condition.condition,
+        ad_group_criterion.listing_group.case_value.product_item_id.value,
+        ad_group_criterion.listing_group.case_value.product_type.level,
+        ad_group_criterion.listing_group.case_value.product_type.value,
+        ad_group_criterion.listing_group.parent_ad_group_criterion,
+        ad_group_criterion.listing_group.type,
+        ad_group_criterion.mobile_app_category.mobile_app_category_constant,
+        ad_group_criterion.mobile_application.app_id,
+        ad_group_criterion.mobile_application.name,
+        ad_group_criterion.negative,
+        ad_group_criterion.parental_status.type,
+        ad_group_criterion.percent_cpc_bid_micros,
+        ad_group_criterion.placement.url,
+        ad_group_criterion.position_estimates.estimated_add_clicks_at_first_position_cpc,
+        ad_group_criterion.position_estimates.estimated_add_cost_at_first_position_cpc,
+        ad_group_criterion.position_estimates.first_page_cpc_micros,
+        ad_group_criterion.position_estimates.first_position_cpc_micros,
+        ad_group_criterion.position_estimates.top_of_page_cpc_micros,
+        ad_group_criterion.quality_info.creative_quality_score,
+        ad_group_criterion.quality_info.post_click_quality_score,
+        ad_group_criterion.quality_info.quality_score,
+        ad_group_criterion.quality_info.search_predicted_ctr,
+        ad_group_criterion.resource_name,
+        ad_group_criterion.status,
+        ad_group_criterion.system_serving_status,
+        ad_group_criterion.topic.path,
+        ad_group_criterion.topic.topic_constant,
+        ad_group_criterion.tracking_url_template,
+        ad_group_criterion.type,
+        ad_group_criterion.url_custom_parameters,
+        ad_group_criterion.user_interest.user_interest_category,
+        ad_group_criterion.user_list.user_list,
+        ad_group_criterion.webpage.conditions,
+        ad_group_criterion.webpage.criterion_name,
+
+        mobile_app_category_constant.id,
+        mobile_app_category_constant.name,
+        mobile_app_category_constant.resource_name,
+
+        topic_constant.id,
+        topic_constant.path,
+        topic_constant.resource_name,
+        topic_constant.topic_constant_parent,
+
+        user_interest.availabilities,
+        user_interest.launched_to_all,
+        user_interest.name,
+        user_interest.resource_name,
+        user_interest.taxonomy_type,
+        user_interest.user_interest_id,
+        user_interest.user_interest_parent,
+
+        user_list.access_reason,
+        user_list.account_user_list_status,
+        user_list.basic_user_list.actions,
+        user_list.closing_reason,
+        user_list.crm_based_user_list.app_id,
+        user_list.crm_based_user_list.data_source_type,
+        user_list.crm_based_user_list.upload_key_type,
+        user_list.description,
+        user_list.eligible_for_display,
+        user_list.eligible_for_search,
+        user_list.id,
+        user_list.integration_code,
+        user_list.logical_user_list.rules,
+        user_list.membership_life_span,
+        user_list.membership_status,
+        user_list.name,
+        user_list.read_only,
+        user_list.resource_name,
+        user_list.rule_based_user_list.combined_rule_user_list.left_operand.rule_item_groups,
+        user_list.rule_based_user_list.combined_rule_user_list.left_operand.rule_type,
+        user_list.rule_based_user_list.combined_rule_user_list.right_operand.rule_item_groups,
+        user_list.rule_based_user_list.combined_rule_user_list.right_operand.rule_type,
+        user_list.rule_based_user_list.combined_rule_user_list.rule_operator,
+        user_list.rule_based_user_list.date_specific_rule_user_list.end_date,
+        user_list.rule_based_user_list.date_specific_rule_user_list.rule.rule_item_groups,
+        user_list.rule_based_user_list.date_specific_rule_user_list.rule.rule_type,
+        user_list.rule_based_user_list.date_specific_rule_user_list.start_date,
+        user_list.rule_based_user_list.expression_rule_user_list.rule.rule_item_groups,
+        user_list.rule_based_user_list.expression_rule_user_list.rule.rule_type,
+        user_list.rule_based_user_list.prepopulation_status,
+        user_list.similar_user_list.seed_user_list,
+        user_list.size_for_display,
+        user_list.size_for_search,
+        user_list.size_range_for_display,
+        user_list.size_range_for_search,
+        user_list.type
+
+      FROM
+        ad_group_criterion
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND ad_group_criterion.type NOT IN (
+           AGE_RANGE,
+           DEVICE,
+           GENDER,
+           KEYWORD,
+           USER_INTEREST,
+           USER_LIST
+        )
+        AND ad_group.status = ENABLED
+        AND ad_group_criterion.status = ENABLED
+        AND ad_group_criterion.negative = false
+
+  #
+  # AdGroup negative criteria
+  #
+  # https://developers.google.com/google-ads/api/fields/v5/ad_group_criterion
+  # 
+  # TODO: add additional filtering to get only criteria under ad groups of
+  # interest
+  #
+  # TODO: Verify this is what we want - do we want _enabled_ negative
+  # criteria. I'm not even sure it's possible for negative criteria to be
+  # enabled/paused. But the API certainly seems to be returning a value for
+  # state. If not, we may want all criteria irrespective of state, as long
+  # as the parent is in-scope.
+  #
+  # Note: some of the criteria in the SELECT clause might not be available
+  # as negative criteria.
+  -
+    filename_prefix: ad_group_criterion.struct.search,effectively_enabled,negative
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+
+        ad_group_criterion.age_range.type,
+        ad_group_criterion.app_payment_model.type,
+        ad_group_criterion.approval_status,
+        ad_group_criterion.bid_modifier,
+        ad_group_criterion.custom_affinity.custom_affinity,
+        ad_group_criterion.custom_intent.custom_intent,
+        ad_group_criterion.disapproval_reasons,
+        ad_group_criterion.gender.type,
+        ad_group_criterion.income_range.type,
+        ad_group_criterion.keyword.match_type,
+        ad_group_criterion.keyword.text,
+        ad_group_criterion.listing_group.parent_ad_group_criterion,
+        ad_group_criterion.listing_group.type,
+        ad_group_criterion.mobile_app_category.mobile_app_category_constant,
+        ad_group_criterion.mobile_application.app_id,
+        ad_group_criterion.mobile_application.name,
+        ad_group_criterion.negative,
+        ad_group_criterion.parental_status.type,
+        ad_group_criterion.placement.url,
+        ad_group_criterion.position_estimates.estimated_add_clicks_at_first_position_cpc,
+        ad_group_criterion.position_estimates.estimated_add_cost_at_first_position_cpc,
+        ad_group_criterion.position_estimates.first_page_cpc_micros,
+        ad_group_criterion.position_estimates.first_position_cpc_micros,
+        ad_group_criterion.position_estimates.top_of_page_cpc_micros,
+        ad_group_criterion.quality_info.creative_quality_score,
+        ad_group_criterion.quality_info.post_click_quality_score,
+        ad_group_criterion.quality_info.quality_score,
+        ad_group_criterion.quality_info.search_predicted_ctr,
+        ad_group_criterion.status,
+        ad_group_criterion.system_serving_status,
+        ad_group_criterion.topic.path,
+        ad_group_criterion.topic.topic_constant,
+        ad_group_criterion.type,
+        ad_group_criterion.user_interest.user_interest_category,
+        ad_group_criterion.user_list.user_list,
+        ad_group_criterion.webpage.conditions,
+        ad_group_criterion.webpage.criterion_name,
+        ad_group_criterion.youtube_channel.channel_id,
+        ad_group_criterion.youtube_video.video_id,
+
+        mobile_app_category_constant.id,
+        mobile_app_category_constant.name,
+        mobile_app_category_constant.resource_name,
+
+        topic_constant.id,
+        topic_constant.path,
+        topic_constant.resource_name,
+        topic_constant.topic_constant_parent,
+
+        user_interest.availabilities,
+        user_interest.launched_to_all,
+        user_interest.name,
+        user_interest.resource_name,
+        user_interest.taxonomy_type,
+        user_interest.user_interest_id,
+        user_interest.user_interest_parent,
+
+        user_list.access_reason,
+        user_list.account_user_list_status,
+        user_list.basic_user_list.actions,
+        user_list.closing_reason,
+        user_list.crm_based_user_list.app_id,
+        user_list.crm_based_user_list.data_source_type,
+        user_list.crm_based_user_list.upload_key_type,
+        user_list.description,
+        user_list.eligible_for_display,
+        user_list.eligible_for_search,
+        user_list.id,
+        user_list.integration_code,
+        user_list.logical_user_list.rules,
+        user_list.membership_life_span,
+        user_list.membership_status,
+        user_list.name,
+        user_list.read_only,
+        user_list.resource_name,
+        user_list.rule_based_user_list.combined_rule_user_list.left_operand.rule_item_groups,
+        user_list.rule_based_user_list.combined_rule_user_list.left_operand.rule_type,
+        user_list.rule_based_user_list.combined_rule_user_list.right_operand.rule_item_groups,
+        user_list.rule_based_user_list.combined_rule_user_list.right_operand.rule_type,
+        user_list.rule_based_user_list.combined_rule_user_list.rule_operator,
+        user_list.rule_based_user_list.date_specific_rule_user_list.end_date,
+        user_list.rule_based_user_list.date_specific_rule_user_list.rule.rule_item_groups,
+        user_list.rule_based_user_list.date_specific_rule_user_list.rule.rule_type,
+        user_list.rule_based_user_list.date_specific_rule_user_list.start_date,
+        user_list.rule_based_user_list.expression_rule_user_list.rule.rule_item_groups,
+        user_list.rule_based_user_list.expression_rule_user_list.rule.rule_type,
+        user_list.rule_based_user_list.prepopulation_status,
+        user_list.similar_user_list.seed_user_list,
+        user_list.size_for_display,
+        user_list.size_for_search,
+        user_list.size_range_for_display,
+        user_list.size_range_for_search,
+        user_list.type
+
+      FROM
+        ad_group_criterion
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND ad_group.status = ENABLED
+        AND ad_group_criterion.status = ENABLED
+        AND ad_group_criterion.negative = true
+
+  #
+  # AdGroup biddable criteria -> keyword
+  # https://developers.google.com/google-ads/api/fields/v5/keyword_view
+  #
+  -
+    filename_prefix: keyword_view.struct.search,effectively_enabled
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+
+        ad_group_criterion.approval_status,
+        ad_group_criterion.bid_modifier,
+        ad_group_criterion.cpc_bid_micros,
+        ad_group_criterion.cpm_bid_micros,
+        ad_group_criterion.cpv_bid_micros,
+        ad_group_criterion.disapproval_reasons,
+        ad_group_criterion.effective_cpc_bid_micros,
+        ad_group_criterion.effective_cpc_bid_source,
+        ad_group_criterion.effective_cpm_bid_micros,
+        ad_group_criterion.effective_cpm_bid_source,
+        ad_group_criterion.effective_cpv_bid_micros,
+        ad_group_criterion.effective_cpv_bid_source,
+        ad_group_criterion.effective_percent_cpc_bid_micros,
+        ad_group_criterion.effective_percent_cpc_bid_source,
+        ad_group_criterion.final_mobile_urls,
+        ad_group_criterion.final_url_suffix,
+        ad_group_criterion.final_urls,
+        ad_group_criterion.keyword.match_type,
+        ad_group_criterion.keyword.text,
+        ad_group_criterion.negative,        
+        ad_group_criterion.percent_cpc_bid_micros,
+        ad_group_criterion.position_estimates.estimated_add_clicks_at_first_position_cpc,
+        ad_group_criterion.position_estimates.estimated_add_cost_at_first_position_cpc,
+        ad_group_criterion.position_estimates.first_page_cpc_micros,
+        ad_group_criterion.position_estimates.first_position_cpc_micros,
+        ad_group_criterion.position_estimates.top_of_page_cpc_micros,
+        ad_group_criterion.quality_info.creative_quality_score,
+        ad_group_criterion.quality_info.post_click_quality_score,
+        ad_group_criterion.quality_info.quality_score,
+        ad_group_criterion.quality_info.search_predicted_ctr,
+        ad_group_criterion.resource_name,
+        ad_group_criterion.status,
+        ad_group_criterion.system_serving_status,
+        ad_group_criterion.tracking_url_template,
+        ad_group_criterion.type,
+        ad_group_criterion.url_custom_parameters
+
+      FROM
+        keyword_view
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND ad_group.status = ENABLED
+        AND ad_group_criterion.status = ENABLED
+        AND ad_group_criterion.negative = false
+
+  #
+  # AdGroup Extensions (under enabled campaigns)
+  # https://developers.google.com/google-ads/api/fields/v5/ad_group_extension_setting
+  #
+  -
+    filename_prefix: ad_group_extension_setting.struct.search,ancestors_enabled
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+
+        ad_group_extension_setting.ad_group,
+        ad_group_extension_setting.device,
+        ad_group_extension_setting.extension_feed_items,
+        ad_group_extension_setting.extension_type,
+        ad_group_extension_setting.resource_name
+
+      FROM
+        ad_group_extension_setting
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND ad_group_extension_setting.extension_feed_items is NOT NULL
+
+  #
+  # AdGroup Ads
+  # https://developers.google.com/google-ads/api/fields/v5/ad_group_ad
+  #
+  # Note: these fields are not selectable
+  # ad_group_ad.ad.local_ad.logo_images.asset
+  # ad_group_ad.ad.local_ad.marketing_images.asset
+  # ad_group_ad.ad.local_ad.videos.asset
+  # ad_group_ad.ad.video_responsive_ad.companion_banners.asset
+  # ad_group_ad.ad.video_responsive_ad.videos.asset
+
+  -
+    filename_prefix: ad_group_ad.struct.search,effectively_enabled
+    query: 
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        ad_group_ad.ad.id,
+
+        ad_group_ad.ad.added_by_google_ads,
+        ad_group_ad.ad.app_ad.descriptions,
+        ad_group_ad.ad.app_ad.headlines,
+        ad_group_ad.ad.app_ad.html5_media_bundles,
+        ad_group_ad.ad.app_ad.images,
+        ad_group_ad.ad.app_ad.mandatory_ad_text,
+        ad_group_ad.ad.app_ad.youtube_videos,
+        ad_group_ad.ad.app_engagement_ad.descriptions,
+        ad_group_ad.ad.app_engagement_ad.headlines,
+        ad_group_ad.ad.app_engagement_ad.images,
+        ad_group_ad.ad.app_engagement_ad.videos,
+        ad_group_ad.ad.call_only_ad.business_name,
+        ad_group_ad.ad.call_only_ad.call_tracked,
+        ad_group_ad.ad.call_only_ad.conversion_action,
+        ad_group_ad.ad.call_only_ad.conversion_reporting_state,
+        ad_group_ad.ad.call_only_ad.country_code,
+        ad_group_ad.ad.call_only_ad.description1,
+        ad_group_ad.ad.call_only_ad.description2,
+        ad_group_ad.ad.call_only_ad.disable_call_conversion,
+        ad_group_ad.ad.call_only_ad.headline1,
+        ad_group_ad.ad.call_only_ad.headline2,
+        ad_group_ad.ad.call_only_ad.phone_number,
+        ad_group_ad.ad.call_only_ad.phone_number_verification_url,
+        ad_group_ad.ad.device_preference,
+        ad_group_ad.ad.display_upload_ad.display_upload_product_type,
+        ad_group_ad.ad.display_upload_ad.media_bundle,
+        ad_group_ad.ad.display_url,
+        ad_group_ad.ad.expanded_dynamic_search_ad.description,
+        ad_group_ad.ad.expanded_dynamic_search_ad.description2,
+        ad_group_ad.ad.expanded_text_ad.description,
+        ad_group_ad.ad.expanded_text_ad.description2,
+        ad_group_ad.ad.expanded_text_ad.headline_part1,
+        ad_group_ad.ad.expanded_text_ad.headline_part2,
+        ad_group_ad.ad.expanded_text_ad.headline_part3,
+        ad_group_ad.ad.expanded_text_ad.path1,
+        ad_group_ad.ad.expanded_text_ad.path2,
+        ad_group_ad.ad.final_app_urls,
+        ad_group_ad.ad.final_mobile_urls,
+        ad_group_ad.ad.final_urls,
+        ad_group_ad.ad.gmail_ad.header_image,
+        ad_group_ad.ad.gmail_ad.marketing_image,
+        ad_group_ad.ad.gmail_ad.marketing_image_description,
+        ad_group_ad.ad.gmail_ad.marketing_image_display_call_to_action.text,
+        ad_group_ad.ad.gmail_ad.marketing_image_display_call_to_action.text_color,
+        ad_group_ad.ad.gmail_ad.marketing_image_display_call_to_action.url_collection_id,
+        ad_group_ad.ad.gmail_ad.marketing_image_headline,
+        ad_group_ad.ad.gmail_ad.product_images,
+        ad_group_ad.ad.gmail_ad.product_videos,
+        ad_group_ad.ad.gmail_ad.teaser.business_name,
+        ad_group_ad.ad.gmail_ad.teaser.description,
+        ad_group_ad.ad.gmail_ad.teaser.headline,
+        ad_group_ad.ad.gmail_ad.teaser.logo_image,
+        ad_group_ad.ad.hotel_ad,
+        ad_group_ad.ad.id,
+        ad_group_ad.ad.image_ad.image_url,
+        ad_group_ad.ad.image_ad.mime_type,
+        ad_group_ad.ad.image_ad.name,
+        ad_group_ad.ad.image_ad.pixel_height,
+        ad_group_ad.ad.image_ad.pixel_width,
+        ad_group_ad.ad.image_ad.preview_image_url,
+        ad_group_ad.ad.image_ad.preview_pixel_height,
+        ad_group_ad.ad.image_ad.preview_pixel_width,
+        ad_group_ad.ad.legacy_app_install_ad,
+        ad_group_ad.ad.legacy_responsive_display_ad.accent_color,
+        ad_group_ad.ad.legacy_responsive_display_ad.allow_flexible_color,
+        ad_group_ad.ad.legacy_responsive_display_ad.business_name,
+        ad_group_ad.ad.legacy_responsive_display_ad.call_to_action_text,
+        ad_group_ad.ad.legacy_responsive_display_ad.description,
+        ad_group_ad.ad.legacy_responsive_display_ad.format_setting,
+        ad_group_ad.ad.legacy_responsive_display_ad.logo_image,
+        ad_group_ad.ad.legacy_responsive_display_ad.long_headline,
+        ad_group_ad.ad.legacy_responsive_display_ad.main_color,
+        ad_group_ad.ad.legacy_responsive_display_ad.marketing_image,
+        ad_group_ad.ad.legacy_responsive_display_ad.price_prefix,
+        ad_group_ad.ad.legacy_responsive_display_ad.promo_text,
+        ad_group_ad.ad.legacy_responsive_display_ad.short_headline,
+        ad_group_ad.ad.legacy_responsive_display_ad.square_logo_image,
+        ad_group_ad.ad.legacy_responsive_display_ad.square_marketing_image,
+        ad_group_ad.ad.local_ad.call_to_actions,
+        ad_group_ad.ad.local_ad.descriptions,
+        ad_group_ad.ad.local_ad.headlines,
+        ad_group_ad.ad.local_ad.logo_images,
+        ad_group_ad.ad.local_ad.marketing_images,
+        ad_group_ad.ad.local_ad.path1,
+        ad_group_ad.ad.local_ad.path2,
+        ad_group_ad.ad.local_ad.videos,
+        ad_group_ad.ad.name,
+        ad_group_ad.ad.resource_name,
+        ad_group_ad.ad.responsive_display_ad.accent_color,
+        ad_group_ad.ad.responsive_display_ad.allow_flexible_color,
+        ad_group_ad.ad.responsive_display_ad.business_name,
+        ad_group_ad.ad.responsive_display_ad.call_to_action_text,
+        ad_group_ad.ad.responsive_display_ad.descriptions,
+        ad_group_ad.ad.responsive_display_ad.format_setting,
+        ad_group_ad.ad.responsive_display_ad.headlines,
+        ad_group_ad.ad.responsive_display_ad.logo_images,
+        ad_group_ad.ad.responsive_display_ad.long_headline,
+        ad_group_ad.ad.responsive_display_ad.main_color,
+        ad_group_ad.ad.responsive_display_ad.marketing_images,
+        ad_group_ad.ad.responsive_display_ad.price_prefix,
+        ad_group_ad.ad.responsive_display_ad.promo_text,
+        ad_group_ad.ad.responsive_display_ad.square_logo_images,
+        ad_group_ad.ad.responsive_display_ad.square_marketing_images,
+        ad_group_ad.ad.responsive_display_ad.youtube_videos,
+        ad_group_ad.ad.responsive_search_ad.descriptions,
+        ad_group_ad.ad.responsive_search_ad.headlines,
+        ad_group_ad.ad.responsive_search_ad.path1,
+        ad_group_ad.ad.responsive_search_ad.path2,
+        ad_group_ad.ad.shopping_comparison_listing_ad.headline,
+        ad_group_ad.ad.shopping_product_ad,
+        ad_group_ad.ad.shopping_smart_ad,
+        ad_group_ad.ad.system_managed_resource_source,
+        ad_group_ad.ad.text_ad.description1,
+        ad_group_ad.ad.text_ad.description2,
+        ad_group_ad.ad.text_ad.headline,
+        ad_group_ad.ad.tracking_url_template,
+        ad_group_ad.ad.type,
+        ad_group_ad.ad.url_collections,
+        ad_group_ad.ad.url_custom_parameters,
+        ad_group_ad.ad.video_ad.bumper.companion_banner,
+        ad_group_ad.ad.video_ad.discovery.description1,
+        ad_group_ad.ad.video_ad.discovery.description2,
+        ad_group_ad.ad.video_ad.discovery.headline,
+        ad_group_ad.ad.video_ad.in_stream.action_button_label,
+        ad_group_ad.ad.video_ad.in_stream.action_headline,
+        ad_group_ad.ad.video_ad.in_stream.companion_banner,
+        ad_group_ad.ad.video_ad.media_file,
+        ad_group_ad.ad.video_ad.non_skippable.companion_banner,
+        ad_group_ad.ad.video_ad.out_stream.description,
+        ad_group_ad.ad.video_ad.out_stream.headline,
+        ad_group_ad.ad.video_responsive_ad.call_to_actions,
+        ad_group_ad.ad.video_responsive_ad.companion_banners,
+        ad_group_ad.ad.video_responsive_ad.descriptions,
+        ad_group_ad.ad.video_responsive_ad.headlines,
+        ad_group_ad.ad.video_responsive_ad.long_headlines,
+        ad_group_ad.ad.video_responsive_ad.videos,
+        ad_group_ad.ad_group,
+        ad_group_ad.ad_strength,
+        ad_group_ad.policy_summary.approval_status,
+        ad_group_ad.policy_summary.policy_topic_entries,
+        ad_group_ad.policy_summary.review_status,
+        ad_group_ad.resource_name,
+        ad_group_ad.status
+
+      FROM
+        ad_group_ad
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND ad_group.status = ENABLED
+        AND ad_group_ad.status = ENABLED
+
+  #
+  # Ad Parameters
+  # https://developers.google.com/google-ads/api/fields/v5/ad_parameter
+  #
+  -
+    filename_prefix: ad_parameter.struct.search,ancestors_enabled
+    query:
+      SELECT
+
+        customer.id,
+        campaign.id,
+        ad_group.id,
+        ad_group_criterion.criterion_id,
+
+        ad_parameter.ad_group_criterion,
+        ad_parameter.insertion_text,
+        ad_parameter.parameter_index,
+        ad_parameter.resource_name
+
+      FROM
+        ad_parameter
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
+        AND ad_group.status = ENABLED
+
+  #
+  # Extension Feed Items
+  # https://developers.google.com/google-ads/api/fields/v5/extension_feed_item
+  #
+  # Note that as the feed items are associated with campaigns/adgroups via
+  # ExtensionSettings, we can't filter these services by campaign network.
+  #
+  -
+    filename_prefix: extension_feed_item.struct.enabled
+    query: 
+      SELECT
+
+        customer.id,
+
+        extension_feed_item.ad_schedules,
+        extension_feed_item.affiliate_location_feed_item.address_line_1,
+        extension_feed_item.affiliate_location_feed_item.address_line_2,
+        extension_feed_item.affiliate_location_feed_item.business_name,
+        extension_feed_item.affiliate_location_feed_item.chain_id,
+        extension_feed_item.affiliate_location_feed_item.chain_name,
+        extension_feed_item.affiliate_location_feed_item.city,
+        extension_feed_item.affiliate_location_feed_item.country_code,
+        extension_feed_item.affiliate_location_feed_item.phone_number,
+        extension_feed_item.affiliate_location_feed_item.postal_code,
+        extension_feed_item.affiliate_location_feed_item.province,
+        extension_feed_item.app_feed_item.app_id,
+        extension_feed_item.app_feed_item.app_store,
+        extension_feed_item.app_feed_item.final_mobile_urls,
+        extension_feed_item.app_feed_item.final_url_suffix,
+        extension_feed_item.app_feed_item.final_urls,
+        extension_feed_item.app_feed_item.link_text,
+        extension_feed_item.app_feed_item.tracking_url_template,
+        extension_feed_item.call_feed_item.call_conversion_action,
+        extension_feed_item.call_feed_item.call_conversion_reporting_state,
+        extension_feed_item.call_feed_item.call_conversion_tracking_disabled,
+        extension_feed_item.call_feed_item.call_tracking_enabled,
+        extension_feed_item.call_feed_item.country_code,
+        extension_feed_item.call_feed_item.phone_number,
+        extension_feed_item.callout_feed_item.callout_text,
+        extension_feed_item.device,
+        extension_feed_item.end_date_time,
+        extension_feed_item.extension_type,
+        extension_feed_item.hotel_callout_feed_item.language_code,
+        extension_feed_item.hotel_callout_feed_item.text,
+        extension_feed_item.id,
+        extension_feed_item.location_feed_item.address_line_1,
+        extension_feed_item.location_feed_item.address_line_2,
+        extension_feed_item.location_feed_item.business_name,
+        extension_feed_item.location_feed_item.city,
+        extension_feed_item.location_feed_item.country_code,
+        extension_feed_item.location_feed_item.phone_number,
+        extension_feed_item.location_feed_item.postal_code,
+        extension_feed_item.location_feed_item.province,
+        extension_feed_item.price_feed_item.final_url_suffix,
+        extension_feed_item.price_feed_item.language_code,
+        extension_feed_item.price_feed_item.price_offerings,
+        extension_feed_item.price_feed_item.price_qualifier,
+        extension_feed_item.price_feed_item.tracking_url_template,
+        extension_feed_item.price_feed_item.type,
+        extension_feed_item.promotion_feed_item.discount_modifier,
+        extension_feed_item.promotion_feed_item.final_mobile_urls,
+        extension_feed_item.promotion_feed_item.final_url_suffix,
+        extension_feed_item.promotion_feed_item.final_urls,
+        extension_feed_item.promotion_feed_item.language_code,
+        extension_feed_item.promotion_feed_item.money_amount_off.amount_micros,
+        extension_feed_item.promotion_feed_item.money_amount_off.currency_code,
+        extension_feed_item.promotion_feed_item.occasion,
+        extension_feed_item.promotion_feed_item.orders_over_amount.amount_micros,
+        extension_feed_item.promotion_feed_item.orders_over_amount.currency_code,
+        extension_feed_item.promotion_feed_item.percent_off,
+        extension_feed_item.promotion_feed_item.promotion_code,
+        extension_feed_item.promotion_feed_item.promotion_end_date,
+        extension_feed_item.promotion_feed_item.promotion_start_date,
+        extension_feed_item.promotion_feed_item.promotion_target,
+        extension_feed_item.promotion_feed_item.tracking_url_template,
+        extension_feed_item.resource_name,
+        extension_feed_item.sitelink_feed_item.final_mobile_urls,
+        extension_feed_item.sitelink_feed_item.final_url_suffix,
+        extension_feed_item.sitelink_feed_item.final_urls,
+        extension_feed_item.sitelink_feed_item.line1,
+        extension_feed_item.sitelink_feed_item.line2,
+        extension_feed_item.sitelink_feed_item.link_text,
+        extension_feed_item.sitelink_feed_item.tracking_url_template,
+        extension_feed_item.start_date_time,
+        extension_feed_item.status,
+        extension_feed_item.structured_snippet_feed_item.header,
+        extension_feed_item.structured_snippet_feed_item.values,
+        extension_feed_item.targeted_ad_group,
+        extension_feed_item.targeted_campaign,
+        extension_feed_item.targeted_geo_target_constant,
+        extension_feed_item.targeted_keyword.match_type,
+        extension_feed_item.targeted_keyword.text,
+        extension_feed_item.text_message_feed_item.business_name,
+        extension_feed_item.text_message_feed_item.country_code,
+        extension_feed_item.text_message_feed_item.extension_text,
+        extension_feed_item.text_message_feed_item.phone_number,
+        extension_feed_item.text_message_feed_item.text
+
+      FROM
+        extension_feed_item
+      WHERE
+        extension_feed_item.status = ENABLED
+
+  #
+  # Conversion Action
+  # https://developers.google.com/google-ads/api/fields/v5/conversion_action
+  #
+  # NOTE: we get the metrics available for this type here in struct as
+  # there's no date segmentation available, so it's not _really_ performance,
+  # but rather a kind of metric based attribute
+  -
+    filename_prefix: conversion_action.struct.enabled
+    query:
+      SELECT
+
+        customer.id,
+       
+        conversion_action.app_id,
+        conversion_action.attribution_model_settings.attribution_model,
+        conversion_action.attribution_model_settings.data_driven_model_status,
+        conversion_action.category,
+        conversion_action.click_through_lookback_window_days,
+        conversion_action.counting_type,
+        conversion_action.firebase_settings.event_name,
+        conversion_action.firebase_settings.project_id,
+        conversion_action.id,
+        conversion_action.include_in_conversions_metric,
+        conversion_action.mobile_app_vendor,
+        conversion_action.name,
+        conversion_action.owner_customer,
+        conversion_action.phone_call_duration_seconds,
+        conversion_action.resource_name,
+        conversion_action.status,
+        conversion_action.tag_snippets,
+        conversion_action.third_party_app_analytics_settings.event_name,
+        conversion_action.type,
+        conversion_action.value_settings.always_use_default_value,
+        conversion_action.value_settings.default_currency_code,
+        conversion_action.value_settings.default_value,
+        conversion_action.view_through_lookback_window_days,
+
+        metrics.conversion_last_conversion_date,
+        metrics.conversion_last_received_request_date_time
+
+      FROM
+        conversion_action
+      WHERE
+        conversion_action.status = ENABLED
+
+  -
+    filename_prefix: conversion_action.struct.hidden
+    query:
+      SELECT
+
+        customer.id,
+
+        conversion_action.app_id,
+        conversion_action.attribution_model_settings.attribution_model,
+        conversion_action.attribution_model_settings.data_driven_model_status,
+        conversion_action.category,
+        conversion_action.click_through_lookback_window_days,
+        conversion_action.counting_type,
+        conversion_action.firebase_settings.event_name,
+        conversion_action.firebase_settings.project_id,
+        conversion_action.id,
+        conversion_action.include_in_conversions_metric,
+        conversion_action.mobile_app_vendor,
+        conversion_action.name,
+        conversion_action.owner_customer,
+        conversion_action.phone_call_duration_seconds,
+        conversion_action.resource_name,
+        conversion_action.status,
+        conversion_action.tag_snippets,
+        conversion_action.third_party_app_analytics_settings.event_name,
+        conversion_action.type,
+        conversion_action.value_settings.always_use_default_value,
+        conversion_action.value_settings.default_currency_code,
+        conversion_action.value_settings.default_value,
+        conversion_action.view_through_lookback_window_days
+        
+        metrics.conversion_last_conversion_date,
+        metrics.conversion_last_received_request_date_time
+
+      FROM
+        conversion_action
+      WHERE
+        conversion_action.status = HIDDEN
+
+  #
+  # Custom Interest
+  # https://developers.google.com/google-ads/api/fields/v5/custom_interest
+  #
+  -
+    filename_prefix: custom_interest.struct.enabled
+    query:
+      SELECT
+
+        customer.id,
+
+        custom_interest.description,
+        custom_interest.id,
+        custom_interest.members,
+        custom_interest.name,
+        custom_interest.resource_name,
+        custom_interest.status,
+        custom_interest.type
+
+      FROM
+        custom_interest
+      WHERE
+        custom_interest.status = ENABLED
+
+  #
+  # Domain Category
+  # https://developers.google.com/google-ads/api/fields/v5/domain_category
+  #
+  -
+    filename_prefix: domain_category.struct.search,ancestors_enabled
+    query:
+      SELECT
+
+        customer.id,
+        campaign.id,
+
+        domain_category.campaign,
+        domain_category.category,
+        domain_category.category_rank,
+        domain_category.coverage_fraction,
+        domain_category.domain,
+        domain_category.has_children,
+        domain_category.language_code,
+        domain_category.recommended_cpc_bid_micros,
+        domain_category.resource_name
+
+      FROM
+        domain_category
+      WHERE
+        campaign.advertising_channel_type = SEARCH
+        AND campaign.status = ENABLED
